@@ -57,6 +57,9 @@ int main(int argc, char* argv[]) {
 				m_window->CloseWindow();
 			}
 		}
+
+		// render the window
+		m_window->Render();
 	}
 
 	// Clean up engine return 0

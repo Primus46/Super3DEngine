@@ -1,4 +1,7 @@
-﻿  Source.cpp
+﻿  SGraphicsEngine.cpp
+  SWindow.cpp
+  Generating Code...
   Engine.vcxproj -> C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Build\Debug\Super3DEngine.exe
+  C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Engine\ExternalLibs\LIBS\glew32.dll
   C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Engine\ExternalLibs\LIBS\SDL2.dll
-          1 file(s) copied.
+          2 file(s) copied.

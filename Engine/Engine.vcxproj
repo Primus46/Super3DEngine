@@ -67,7 +67,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)ExternalLibs\LIBS\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glew32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(ProjectDir)ExternalLibs\LIBS\*.dll" "$(SolutionDir)Build\$(Configuration)\"</Command>
@@ -91,17 +91,22 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)ExternalLibs\LIBS\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glew32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(ProjectDir)ExternalLibs\LIBS\*.dll" "$(SolutionDir)Build\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Private\Graphics\SGraphicsEngine.cpp" />
+    <ClCompile Include="Source\Private\Graphics\SMesh.cpp" />
     <ClCompile Include="Source\Private\SWindow.cpp" />
     <ClCompile Include="Source\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Public\Debugging\SDebug.h" />
+    <ClInclude Include="Source\Public\Graphics\SGraphicsEngine.h" />
+    <ClInclude Include="Source\Public\Graphics\SMesh.h" />
     <ClInclude Include="Source\Public\SWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

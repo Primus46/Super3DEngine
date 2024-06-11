@@ -1,4 +1,6 @@
 #include "SWindow.h"
+#include "Graphics/SGraphicsEngine.h"
+#include "Debugging/SDebug.h"
 
 // External Libs
 #include <SDL/SDL.h>
@@ -54,5 +56,23 @@ bool SWindow::CreateWindow(const SSTWindowParams& params)
 		return false;
 	}
 
+	// creates the graphics engine object
+	m_graphicsEngine = std::unique_ptr<SGraphicsEngine>();
+
+	// initialises the graphics engine and checks
+	if (!m_graphicsEngine->InitEngine(m_sdlWindow, m_params.vsync)) {
+		SDebug::Log("Window failed to initialised graphics engine", ST_ERROR);
+		m_graphicsEngine = nullptr;
+		return false;
+	}
+
 	return true;
+}
+
+void SWindow::Render()
+{	
+	// render the graphics engine if one exists
+	if (m_graphicsEngine) {
+		m_graphicsEngine->Render(m_sdlWindow);
+	}
 }

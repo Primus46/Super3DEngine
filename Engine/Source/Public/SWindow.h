@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 
+class SGraphicsEngine;
+
 struct SSTWindowParams {
 	SSTWindowParams() {
 		title = "Super 3D Engine Window";
@@ -52,6 +54,9 @@ public:
 	// close if the window has been set to close
 	bool IsPendingClose() { return m_shouldClose; }
 
+	// render the graphics engine
+	void Render();
+
 private:
 	// a ref to the window in sdl
 	SDL_Window* m_sdlWindow;
@@ -61,4 +66,7 @@ private:
 
 	// determine if the window shoud close
 	bool m_shouldClose;
+
+	// store the graphics engine
+	std::unique_ptr<SGraphicsEngine> m_graphicsEngine;
 };
