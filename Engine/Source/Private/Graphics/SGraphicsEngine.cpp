@@ -129,12 +129,13 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	static SSTTransform transform;
-	transform.position.x = 0.5f;
-	transform.rotation.z = 90.0f;
+	transform.position.x = 0.0f;
+	transform.rotation.z = 0.0f;
 	transform.scale = glm::vec3(0.5f);
 
 	// rendered custom graphics
 	m_mesh->Render(m_shader, transform);
+	
 
 	// presented the frame to the window
 	// swaping the back buffer with the front buffer
