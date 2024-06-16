@@ -57,7 +57,7 @@ bool SWindow::CreateWindow(const SSTWindowParams& params)
 	}
 
 	// creates the graphics engine object
-	m_graphicsEngine = std::unique_ptr<SGraphicsEngine>();
+	m_graphicsEngine = std::make_unique<SGraphicsEngine>();
 
 	// initialises the graphics engine and checks
 	if (!m_graphicsEngine->InitEngine(m_sdlWindow, m_params.vsync)) {

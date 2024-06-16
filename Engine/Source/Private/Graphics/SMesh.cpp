@@ -1,12 +1,13 @@
 #include "Graphics/SMesh.h"
 #include "Debugging/SDebug.h"
+#include "Graphics/SShaderProgram.h"
 
 // External Libs
 #include <GLEW/glew.h>
 
 SMesh::SMesh()
 {
-	m_vao = m_vbo = m_eao = 0;
+	m_vao = m_vbo = m_eab = 0;
 	SDebug::Log("Mesh created");
 }
 
@@ -15,7 +16,7 @@ SMesh::~SMesh()
 	SDebug::Log("Mesh destroyed");
 }
 
-bool SMesh::CreateMesh(const std::vector<SSTVertexData> vertices, const std::vector<uint32_t>& indices)
+bool SMesh::CreateMesh(const std::vector<SSTVertexData>& vertices, const std::vector<uint32_t>& indices)
 {
 	// store the vertex data
 	m_vertices = vertices;
@@ -53,10 +54,10 @@ bool SMesh::CreateMesh(const std::vector<SSTVertexData> vertices, const std::vec
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
 	// create a Element Array Object
-	glGenBuffers(1, &m_eao);
+	glGenBuffers(1, &m_eab);
 
 	// test if the vbo failed
-	if (m_eao == 0) {
+	if (m_eab == 0) {
 		// convert the error int a readable string
 		std::string errorMsg = reinterpret_cast<const char*>(glewGetErrorString(glGetError()));
 		SDebug::Log("Mesh failed to create EAO: " + errorMsg, ST_WARN);
@@ -64,7 +65,7 @@ bool SMesh::CreateMesh(const std::vector<SSTVertexData> vertices, const std::vec
 	}
 
 	// bind the eao as the active element array buffer object
-	glBindBuffer(GL_ARRAY_BUFFER, m_eao);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_eab);
 
 	// set the buffer data
 	// start with the VBO which stores the vertex data
@@ -84,7 +85,7 @@ bool SMesh::CreateMesh(const std::vector<SSTVertexData> vertices, const std::vec
 	);
 
 	// pass out the vertex data in seperate formats
-	glDisableVertexAttribArray(0);
+	glEnableVertexAttribArray(0);
 
 	// set the position of that data to the 0 index of the attribute array
 	glVertexAttribPointer(
@@ -93,7 +94,20 @@ bool SMesh::CreateMesh(const std::vector<SSTVertexData> vertices, const std::vec
 		GL_FLOAT, // the type of data to store
 		GL_FALSE, // should we normalise the valuse, generally no
 		sizeof(SSTVertexData), // how big is each data array in a vertex
-		nullptr // 
+		nullptr // how many numbers to skip
+	);
+
+	// pass out the vertex data in seperate formats
+	glEnableVertexAttribArray(1);
+
+	// set the position of that data to the 1 index of the attribute array
+	glVertexAttribPointer(
+		1, // location to store data in the atttribute array
+		3, // how many numbers to pass into the attribute array index
+		GL_FLOAT, // the type of data to store
+		GL_FALSE, // should we normalise the valuse, generally no
+		sizeof(SSTVertexData), // how big is each data array in a vertex
+		(void*)(sizeof(float) * 3) // how many numbers to skip in bytes
 	);
 
 	// common practice to clear the vao from the GPU
@@ -103,8 +117,13 @@ bool SMesh::CreateMesh(const std::vector<SSTVertexData> vertices, const std::vec
 
 }
 
-void SMesh::Render()
+void SMesh::Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform)
 {
+	shader->Activate();
+
+	// update the transform of the mesh based on the model transform
+	shader->SetModelTransform(transform);
+
 	// binding this mesh as the active vao
 	glBindVertexArray(m_vao);
 

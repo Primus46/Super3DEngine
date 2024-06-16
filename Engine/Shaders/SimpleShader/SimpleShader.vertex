@@ -1,0 +1,15 @@
+#version 460 core
+
+layout (Location = 0) in vec3 vPosition;
+layout (Location = 1) in vec3 vColour;
+
+uniform mat4 model = mat4(1.0);
+
+out vec3 fColour;
+
+void main () {
+	// gl_Position is the position of the vertex based on screen and then offset
+	gl_Position = model * vec4(vPosition, 1.0); 
+	// pass the colour from the the vertex to the frag shader
+	fColour = vColour;
+}

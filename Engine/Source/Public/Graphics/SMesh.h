@@ -5,6 +5,9 @@
 #include <vector>
 #include <cstdint>
 
+class SShaderProgram;
+struct SSTTransform;
+
 struct SSTVertexData {
 	float m_position[3] = { 0.0f, 0.0f, 0.0f };
 	float m_colour[3] = { 1.0f, 1.0f, 1.0f };
@@ -18,11 +21,10 @@ public:
 	~SMesh();
 	
 	// creating a mesh using vertex and index data
-	bool CreateMesh(const std::vector<SSTVertexData> vertices, 
-		const std::vector<uint32_t>& indices);
+	bool CreateMesh(const std::vector<SSTVertexData>& vertices, const std::vector<uint32_t>& indices);
 
 	// draw the mesh to the renderer
-	void Render();
+	void Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform);
 
 private:
 	// store the vertices
@@ -38,6 +40,6 @@ private:
 	uint32_t m_vbo;
 
 	// store the ID for the element array object
-	uint32_t m_eao;
+	uint32_t m_eab;
 
 };
