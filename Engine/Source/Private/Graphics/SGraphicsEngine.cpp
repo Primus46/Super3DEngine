@@ -9,17 +9,27 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_opengl.h>
 
-const std::vector<SSTVertexData> vertexData = {
+std::vector<SSTVertexData> vertexData = {
 	//	 x	   y	 z        r     g     b
-	{ {-0.5f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f} }, // vertx data 1 - top left
-	{ {0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f} }, // vertx data 2 - top right
-	{ {-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f} }, // vertx data 3 - bottom left
-	{ {0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f} } // vertx data 4 - bottom right
+	// square
+	{ {-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f} }, // vertx data 1 - top left
+	{ {0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f} }, // vertx data 2 - top right
+	{ {-0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 0.0f} }, // vertx data 3 - bottom left
+	{ {0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 0.0f} }, // vertx data 4 - bottom right
+
+	// triangle
+	//{ {-1.0f, -1.0f, 0.0f}, {1.0f, 0.0f, 0.0f} }, // vertx data 1 - top left
+	//{ {1.0f, -1.0f, 0.0f}, {0.0f, 1.0f, 0.0f} }, // vertx data 2 - top right
+	//{ { 0.0f,  1.0f, 0.0f}, {0.0f, 0.0f, 1.0f} } // vertx data 3 - bottom 
 };
-const std::vector<uint32_t> indexData = {
+
+std::vector<uint32_t> indexData = {
 	0, 1, 2, // triangle 1
-	1, 2, 3 // triangle 2
+	1, 2, 3, // triangle 2
+
+	//4, 5, 6  // triangle 3
 };
+
 // test for debug
 std::unique_ptr<SMesh> m_mesh;
 
@@ -88,7 +98,7 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 	// create tne debug mesh
 	m_mesh = std::make_unique<SMesh>();
 
-	
+
 
 	if (!m_mesh->CreateMesh(vertexData, indexData)) {
 		SDebug::Log("Failed to create mesh");
@@ -107,14 +117,20 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 	// clear the back buffer with a solid colour
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	static SSTTransform transform;
-	// transform.position.x = 0.0f;
-	// transform.rotation.z += 0.01f;
-	// transform.scale = glm::vec3(1.0f);
+	static SSTTransform SquareTransform;
+	SquareTransform.position.x = -0.2f;
+	SquareTransform.rotation.z = 45.0f; // monitor refresh rate is 165hz so this is as fast as I  can rotate it
+	SquareTransform.scale = glm::vec3(1.0f);
 
 	// rendered custom graphics
-	m_mesh->Render(m_shader, transform);
-	
+	m_mesh->Render(m_shader, SquareTransform);
+
+	static SSTTransform TriangleTransform; // the rotation variable was making the second mesh stay on it's side even when the other 2 variable changed fine so made a second variable to avoid conflicts
+
+	TriangleTransform.position.x = 0.8f;
+	TriangleTransform.rotation.z = 0.0f;
+	TriangleTransform.scale = glm::vec3(0.25f);
+	m_mesh->Render(m_shader, TriangleTransform);
 
 	// presented the frame to the window
 	// swaping the back buffer with the front buffer
