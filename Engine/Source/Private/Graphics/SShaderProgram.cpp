@@ -22,7 +22,7 @@ SShaderProgram::~SShaderProgram()
 	SDebug::Log("Shader program " + std::to_string(m_programID) + "destroyed");
 }
 
-bool SShaderProgram::InitShader(const std::string& vShaderPath, const std::string& fShaderPath)
+bool SShaderProgram::InitShader(const SString& vShaderPath, const SString& fShaderPath)
 {
 	// create the shader program in open gl
 	m_programID = glCreateProgram();
@@ -74,10 +74,14 @@ void SShaderProgram::SetModelTransform(const SSTTransform& transform)
 	);
  }
 
-bool SShaderProgram::ImportShaderByType(const std::string& filePath, SEShaderType shaderType)
+void SShaderProgram::RunTexture(const TShared<SString>& texture, const SUi32& slot)
+{
+}
+
+bool SShaderProgram::ImportShaderByType(const SString& filePath, SEShaderType shaderType)
 {
 	// convert the shader to a string
-	const std::string shaderStr = ConvertFileToString(filePath);
+	const SString shaderStr = ConvertFileToString(filePath);
 
 	// make sure there is a string path
 	if (shaderStr.empty()) {
@@ -102,7 +106,7 @@ bool SShaderProgram::ImportShaderByType(const std::string& filePath, SEShaderTyp
 	// make sure there is a string path
 	if (m_shaderIDs[shaderType] == 0) {
 		// error that the string failed to import
-		const std::string errorMsg = SGET_GLEW_ERROR;
+		const SString errorMsg = SGET_GLEW_ERROR;
 		SDebug::Log("shader program could not assign shader id: " + errorMsg, ST_ERROR);
 		return false;
 	}
@@ -122,7 +126,7 @@ bool SShaderProgram::ImportShaderByType(const std::string& filePath, SEShaderTyp
 		// fill the log with info from gl about what happened
 		glGetShaderInfoLog(m_shaderIDs[shaderType], 512, nullptr, infoLog);
 		// log it
-		SDebug::Log("Shader compilation error: " + std::string(infoLog), ST_ERROR);
+		SDebug::Log("Shader compilation error: " + SString(infoLog), ST_ERROR);
 		return false;
 	}
 
@@ -132,7 +136,7 @@ bool SShaderProgram::ImportShaderByType(const std::string& filePath, SEShaderTyp
 	return true;
 }
 
-std::string SShaderProgram::ConvertFileToString(const std::string& filePath)
+SString SShaderProgram::ConvertFileToString(const SString& filePath)
 {
 	// convert the file path into an ifstream
 	std::ifstream shaderSource(filePath);
@@ -171,7 +175,7 @@ bool SShaderProgram::LinkToGPU()
 		// fill the log with info from gl about what happened
 		glGetShaderInfoLog(m_programID, 512, nullptr, infoLog);
 		// log it
-		SDebug::Log("Shader link error: " + std::string(infoLog), ST_ERROR);
+		SDebug::Log("Shader link error: " + SString(infoLog), ST_ERROR);
 		return false;
 	}
 

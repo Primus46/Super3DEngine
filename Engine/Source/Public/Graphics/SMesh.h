@@ -1,9 +1,8 @@
 #pragma once
+#include "EngineTypes.h"
 
 // System Libs
-#include <iostream>
-#include <vector>
-#include <cstdint>
+
 
 class SShaderProgram;
 struct SSTTransform;
@@ -41,5 +40,8 @@ private:
 
 	// store the ID for the element array object
 	uint32_t m_eab;
+
+	// texture for the mesh
+	//TShared<STexture> m_texture;
 
 };

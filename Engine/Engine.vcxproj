@@ -98,17 +98,22 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ExternalLibs\Includes\STB_IMAGE\stb_image.cpp" />
     <ClCompile Include="Source\Private\Graphics\SGraphicsEngine.cpp" />
     <ClCompile Include="Source\Private\Graphics\SMesh.cpp" />
     <ClCompile Include="Source\Private\Graphics\SShaderProgram.cpp" />
     <ClCompile Include="Source\Private\SWindow.cpp" />
+    <ClCompile Include="Source\Private\Graphics\STexture.cpp" />
     <ClCompile Include="Source\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ExternalLibs\Includes\STB_IMAGE\stb_image.h" />
     <ClInclude Include="Source\Public\Debugging\SDebug.h" />
+    <ClInclude Include="Source\Public\EngineTypes.h" />
     <ClInclude Include="Source\Public\Graphics\SGraphicsEngine.h" />
     <ClInclude Include="Source\Public\Graphics\SMesh.h" />
     <ClInclude Include="Source\Public\Graphics\SShaderProgram.h" />
+    <ClInclude Include="Source\Public\Graphics\STexture.h" />
     <ClInclude Include="Source\Public\Math\SSTTransform.h" />
     <ClInclude Include="Source\Public\SWindow.h" />
   </ItemGroup>

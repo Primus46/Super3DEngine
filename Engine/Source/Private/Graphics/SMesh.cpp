@@ -100,7 +100,7 @@ bool SMesh::CreateMesh(const std::vector<SSTVertexData>& vertices, const std::ve
 	// pass out the vertex data in seperate formats
 	glEnableVertexAttribArray(1);
 
-	// set the position of that data to the 1 index of the attribute array
+	// set the colour of that data to the 1 index of the attribute array
 	glVertexAttribPointer(
 		1, // location to store data in the atttribute array
 		3, // how many numbers to pass into the attribute array index
@@ -108,6 +108,19 @@ bool SMesh::CreateMesh(const std::vector<SSTVertexData>& vertices, const std::ve
 		GL_FALSE, // should we normalise the valuse, generally no
 		sizeof(SSTVertexData), // how big is each data array in a vertex
 		(void*)(sizeof(float) * 3) // how many numbers to skip in bytes
+	);
+
+	// pass out the vertex data in seperate formats
+	glEnableVertexAttribArray(2);
+
+	// set the texture coordinates of that data to the 1 index of the attribute array
+	glVertexAttribPointer(
+		2, // location to store data in the atttribute array
+		2, // how many numbers to pass into the attribute array index
+		GL_FLOAT, // the type of data to store
+		GL_FALSE, // should we normalise the valuse, generally no
+		sizeof(SSTVertexData), // how big is each data array in a vertex
+		(void*)(sizeof(float) * 6) // how many numbers to skip in bytes
 	);
 
 	// common practice to clear the vao from the GPU

@@ -9,8 +9,17 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_opengl.h>
 
-std::vector<SSTVertexData> vertexData;
-std::vector<uint32_t> indexData;
+const std::vector<SSTVertexData> vertexData = {
+	//	 x	   y	 z        r     g     b
+	{ {-0.5f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f} }, // vertx data 1 - top left
+	{ {0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f} }, // vertx data 2 - top right
+	{ {-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f} }, // vertx data 3 - bottom left
+	{ {0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f} } // vertx data 4 - bottom right
+};
+const std::vector<uint32_t> indexData = {
+	0, 1, 2, // triangle 1
+	1, 2, 3 // triangle 2
+};
 // test for debug
 std::unique_ptr<SMesh> m_mesh;
 
@@ -76,40 +85,10 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 	// log the success of the graphics engine init
 	SDebug::Log("Successfully initialised graphics engine", ST_SUCCESS);
 
+	// create tne debug mesh
 	m_mesh = std::make_unique<SMesh>();
 
-	vertexData.resize(3);
-	// Vertex 1
-	vertexData[0].m_position[0] = 0.0f;
-	vertexData[0].m_position[1] = 0.5f;
-	vertexData[0].m_position[2] = 0.0f;
-	// colour for vertex 1
-	vertexData[0].m_colour[0] = 1.0f;
-	vertexData[0].m_colour[1] = 0.0f;
-	vertexData[0].m_colour[2] = 0.0f;
-
-	// Vertex 2
-	vertexData[1].m_position[0] = -0.5f;
-	vertexData[1].m_position[1] = -0.5f;
-	vertexData[1].m_position[2] = 0.0f;
-	// colour for vertex 2
-	vertexData[1].m_colour[0] = 0.0f;
-	vertexData[1].m_colour[1] = 1.0f;
-	vertexData[1].m_colour[2] = 0.0f;
-
-	// Vertex 3
-	vertexData[2].m_position[0] = 0.5f;
-	vertexData[2].m_position[1] = -0.5f;
-	vertexData[2].m_position[2] = 0.0f;
-	// colour for vertex 3
-	vertexData[2].m_colour[0] = 0.0f;
-	vertexData[2].m_colour[1] = 0.0f;
-	vertexData[2].m_colour[2] = 1.0f;
 	
-	indexData.resize(3);
-	indexData[0] = 0; // Vertex 1
-	indexData[1] = 1; // Vertex 2
-	indexData[2] = 2; // Vertex 3
 
 	if (!m_mesh->CreateMesh(vertexData, indexData)) {
 		SDebug::Log("Failed to create mesh");
@@ -129,9 +108,9 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	static SSTTransform transform;
-	transform.position.x = 0.0f;
-	transform.rotation.z = 0.0f;
-	transform.scale = glm::vec3(0.5f);
+	// transform.position.x = 0.0f;
+	// transform.rotation.z += 0.01f;
+	// transform.scale = glm::vec3(1.0f);
 
 	// rendered custom graphics
 	m_mesh->Render(m_shader, transform);
