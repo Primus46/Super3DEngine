@@ -134,6 +134,12 @@ void SMesh::Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTrans
 {
 	shader->Activate();
 
+	// does a texture exist
+	if (m_texture) {
+		// run the texture
+		shader->RunTexture(m_texture, 0);
+	}
+
 	// update the transform of the mesh based on the model transform
 	shader->SetModelTransform(transform);
 

@@ -6,6 +6,7 @@
 
 class SShaderProgram;
 struct SSTTransform;
+class STexture;
 
 struct SSTVertexData {
 	float m_position[3] = { 0.0f, 0.0f, 0.0f };
@@ -25,6 +26,9 @@ public:
 	// draw the mesh to the renderer
 	void Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform);
 
+	// set the texture in the mesh
+	void SetTexture(const TShared<STexture>& texture) { m_texture = texture; }
+
 private:
 	// store the vertices
 	std::vector<SSTVertexData> m_vertices;
@@ -42,6 +46,6 @@ private:
 	uint32_t m_eab;
 
 	// texture for the mesh
-	//TShared<STexture> m_texture;
+	TShared<STexture> m_texture;
 
 };

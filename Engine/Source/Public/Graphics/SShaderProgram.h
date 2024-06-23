@@ -1,13 +1,10 @@
 #pragma once
 #include "EngineTypes.h"
 
-
-// System Libs
-#include <string>
-#include <cstdint>
+class STexture;
 
 // enum to determine the type of shader
-enum SEShaderType : uint8_t {
+enum SEShaderType : SUi8 {
 	ST_VERTEX = 0U,
 	ST_FRAGMENT
 };
@@ -30,7 +27,7 @@ public:
 	void SetModelTransform(const SSTTransform& transform);
 
 	// set a texture in the shader based on the shot
-	void RunTexture(const TShared<SString>& texture, const SUi32& slot);
+	void RunTexture(const TShared<STexture>& texture, const SUi32& slot);
 
 private:
 	// import a shader based on the shader type
@@ -46,8 +43,8 @@ private:
 	SString m_filePath[2] = { "", "" };
 
 	// store the shader ids
-	uint32_t m_shaderIDs[2] = { 0, 0 };
+	SUi8 m_shaderIDs[2] = { 0, 0 };
 
 	// store the id for the program
-	uint32_t m_programID;
+	SUi8 m_programID;
 };

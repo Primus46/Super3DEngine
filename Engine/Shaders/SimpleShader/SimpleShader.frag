@@ -8,5 +8,5 @@ uniform sampler2D colourMap;
 out vec4 finalColour;
 
 void main() {
-	finalColour = vec4(fColour, 1.0);
+	finalColour = texture(colourMap, fTexCoords) * vec4(fColour, 1.0);
 }

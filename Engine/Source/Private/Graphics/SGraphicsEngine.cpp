@@ -3,6 +3,8 @@
 #include "Graphics/SMesh.h"
 #include "Graphics/SShaderProgram.h"
 #include "Math/SSTTransform.h"
+#include "Graphics/STexture.h"
+
 
 // External Libs
 #include <GLEW/glew.h>
@@ -12,10 +14,10 @@
 std::vector<SSTVertexData> vertexData = {
 	//	 x	   y	 z        r     g     b
 	// square
-	{ {-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f} }, // vertx data 1 - top left
-	{ {0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f} }, // vertx data 2 - top right
-	{ {-0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 0.0f} }, // vertx data 3 - bottom left
-	{ {0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 0.0f} }, // vertx data 4 - bottom right
+	{ {-0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} },// vertx data 1 - top left
+	{ { 0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} }, // vertx data 2 - top right
+	{ {-0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} }, // vertx data 3 - bottom left
+	{ { 0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} }, // vertx data 4 - bottom right
 
 	// triangle
 	//{ {-1.0f, -1.0f, 0.0f}, {1.0f, 0.0f, 0.0f} }, // vertx data 1 - top left
@@ -98,10 +100,16 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 	// create tne debug mesh
 	m_mesh = std::make_unique<SMesh>();
 
-
-
 	if (!m_mesh->CreateMesh(vertexData, indexData)) {
 		SDebug::Log("Failed to create mesh");
+	}
+
+	// creates the texture object
+	TShared<STexture> defaultTexture = TMakeShared<STexture>();
+
+	// add the texture to the mesh if it successfully created
+	if (defaultTexture->LoadTexture("Default Grid", "Textures/Name_1m x 1m.png")) {
+		m_mesh->SetTexture(defaultTexture);
 	}
 
 	return true;

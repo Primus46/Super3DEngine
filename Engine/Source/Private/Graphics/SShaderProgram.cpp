@@ -1,6 +1,7 @@
 #include "Graphics/SShaderProgram.h"
 #include "Debugging/SDebug.h"
 #include "Math/SSTTransform.h"
+#include "Graphics/STexture.h"
 
 // External Libs
 #include <GLEW/glew.h>
@@ -74,8 +75,26 @@ void SShaderProgram::SetModelTransform(const SSTTransform& transform)
 	);
  }
 
-void SShaderProgram::RunTexture(const TShared<SString>& texture, const SUi32& slot)
+void SShaderProgram::RunTexture(const TShared<STexture>& texture, const SUi32& slot)
 {
+	// Bind the texture
+	texture->BindTexture(slot);
+
+	// the id for the variable in the shader
+	int varID = 0;
+
+	// get the id depending on the slot
+	switch (slot) {
+	case 0:
+		varID = glGetUniformLocation(m_programID, "colourMap");
+		break;
+	default:
+		break;
+	}
+
+	// update the shader
+	glUniform1i(varID, slot);
+
 }
 
 bool SShaderProgram::ImportShaderByType(const SString& filePath, SEShaderType shaderType)
