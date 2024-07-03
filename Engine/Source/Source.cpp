@@ -1,11 +1,11 @@
-// System Libs
-#include <iostream>
+#include "EngineTypes.h"
 
 // External Libs
 #include <SDL/SDL.h>
 
 // Engine Libs
 #include "SWindow.h"
+#include "Listeners/SInput.h"
 
 // -- smart pointers delete themselves when there is no owner reference
 // shared pointer = shares ownership across all references
@@ -13,7 +13,8 @@
 // weak pointer = this has no ownership over any references
 
 // source variables
-std::unique_ptr<SWindow> m_window;
+TShared<SWindow> m_window;
+TUnique<SInput> m_input;
 
 // source functions
 bool Initialise()
@@ -38,13 +39,16 @@ bool Initialise()
 
 
 	// creating window object
-	m_window = std::make_unique<SWindow>();
+	m_window = TMakeShared<SWindow>();
 
 	// creating an sdl window
 	if (!m_window->CreateWindow({ "Game window",
 		SDL_WINDOWPOS_CENTERED_DISPLAY(1), SDL_WINDOWPOS_CENTERED_DISPLAY(1),
 		720, 720 }))
 		return false;
+
+	// m_input = TMakeUnique<SInput>();
+	// m_input->InitInput(m_window);
 
 	return true;
 }

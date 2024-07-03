@@ -102,6 +102,7 @@
     <ClCompile Include="Source\Private\Graphics\SGraphicsEngine.cpp" />
     <ClCompile Include="Source\Private\Graphics\SMesh.cpp" />
     <ClCompile Include="Source\Private\Graphics\SShaderProgram.cpp" />
+    <ClCompile Include="Source\Private\Listeners\SInput.cpp" />
     <ClCompile Include="Source\Private\SWindow.cpp" />
     <ClCompile Include="Source\Private\Graphics\STexture.cpp" />
     <ClCompile Include="Source\Source.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="Source\Public\Graphics\SMesh.h" />
     <ClInclude Include="Source\Public\Graphics\SShaderProgram.h" />
     <ClInclude Include="Source\Public\Graphics\STexture.h" />
+    <ClInclude Include="Source\Public\Listeners\SInput.h" />
     <ClInclude Include="Source\Public\Math\SSTTransform.h" />
     <ClInclude Include="Source\Public\SWindow.h" />
   </ItemGroup>
