@@ -132,8 +132,6 @@ bool SMesh::CreateMesh(const std::vector<SSTVertexData>& vertices, const std::ve
 
 void SMesh::Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform)
 {
-	shader->Activate();
-
 	// does a texture exist
 	if (m_texture) {
 		// run the texture

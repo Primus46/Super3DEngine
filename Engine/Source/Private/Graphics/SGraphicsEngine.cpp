@@ -1,9 +1,9 @@
 #include "Graphics/SGraphicsEngine.h"
-#include "Debugging/SDebug.h"
-#include "Graphics/SMesh.h"
+#include "Graphics/SModel.h"
 #include "Graphics/SShaderProgram.h"
 #include "Math/SSTTransform.h"
 #include "Graphics/STexture.h"
+#include "Graphics/SSTCamera.h"
 
 
 // External Libs
@@ -11,29 +11,9 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_opengl.h>
 
-std::vector<SSTVertexData> vertexData = {
-	//	 x	   y	 z        r     g     b
-	// square
-	{ {-0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} },// vertx data 1 - top left
-	{ { 0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} }, // vertx data 2 - top right
-	{ {-0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} }, // vertx data 3 - bottom left
-	{ { 0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} }, // vertx data 4 - bottom right
-
-	// triangle
-	//{ {-1.0f, -1.0f, 0.0f}, {1.0f, 0.0f, 0.0f} }, // vertx data 1 - top left
-	//{ {1.0f, -1.0f, 0.0f}, {0.0f, 1.0f, 0.0f} }, // vertx data 2 - top right
-	//{ { 0.0f,  1.0f, 0.0f}, {0.0f, 0.0f, 1.0f} } // vertx data 3 - bottom 
-};
-
-std::vector<uint32_t> indexData = {
-	0, 1, 2, // triangle 1
-	1, 2, 3, // triangle 2
-
-	//4, 5, 6  // triangle 3
-};
 
 // test for debug
-std::unique_ptr<SMesh> m_mesh;
+TUnique<SModel> m_model;
 
 bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 {
@@ -83,7 +63,11 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 		return false;
 	}
 
-	m_shader = std::make_shared<SShaderProgram>();
+	// enable depth to be tested
+	glEnable(GL_DEPTH_TEST);
+
+	// create the shader object
+	m_shader = TMakeShared<SShaderProgram>();
 
 	// attempt to init shader and test if failed
 	if (!m_shader->InitShader(
@@ -94,23 +78,26 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 		return false;
 	}
 
-	// log the success of the graphics engine init
-	SDebug::Log("Successfully initialised graphics engine", ST_SUCCESS);
-
-	// create tne debug mesh
-	m_mesh = std::make_unique<SMesh>();
-
-	if (!m_mesh->CreateMesh(vertexData, indexData)) {
-		SDebug::Log("Failed to create mesh");
-	}
+	// create the camera
+	m_camera = TMakeShared<SSTCamera>();
+	m_camera->transform.position.z -= 5.0f;
 
 	// creates the texture object
 	TShared<STexture> defaultTexture = TMakeShared<STexture>();
 
 	// add the texture to the mesh if it successfully created
-	if (defaultTexture->LoadTexture("Default Grid", "Textures/Name_1m x 1m.png")) {
-		m_mesh->SetTexture(defaultTexture);
+	if (!defaultTexture->LoadTexture("Default Grid", "Textures/Name_1m x 1m.png")) {
+		SDebug::Log("Graphics engine default texture failed to load", ST_ERROR);
 	}
+
+	// DEBUG
+	m_model = TMakeUnique<SModel>();
+	m_model->MakeCube(defaultTexture);
+
+
+
+	// log the success of the graphics engine init
+	SDebug::Log("Successfully initialised graphics engine", ST_SUCCESS);
 
 	return true;
 }
@@ -123,22 +110,23 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 	// set background colour
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	// clear the back buffer with a solid colour
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	static SSTTransform SquareTransform;
-	SquareTransform.position.x = -0.2f;
-	SquareTransform.rotation.z = 45.0f; // monitor refresh rate is 165hz so this is as fast as I  can rotate it
-	SquareTransform.scale = glm::vec3(1.0f);
+	m_model->GetTransform().rotation.x += 0.01f;
+	m_model->GetTransform().rotation.y += 0.01f;
+	//m_model->GetTransform().rotation.z += 0.01f;
+
+	// activate the shader
+	m_shader->Activate();
+
+	// set the world transformations based on the camera
+	m_shader->SetWorldTransform(m_camera);
 
 	// rendered custom graphics
-	m_mesh->Render(m_shader, SquareTransform);
-
-	static SSTTransform TriangleTransform; // the rotation variable was making the second mesh stay on it's side even when the other 2 variable changed fine so made a second variable to avoid conflicts
-
-	TriangleTransform.position.x = 0.8f;
-	TriangleTransform.rotation.z = 0.0f;
-	TriangleTransform.scale = glm::vec3(0.25f);
-	m_mesh->Render(m_shader, TriangleTransform);
+	// models will update their own positions in the mesh based on the transform
+	m_model->Render(m_shader);
+	
+	
 
 	// presented the frame to the window
 	// swaping the back buffer with the front buffer

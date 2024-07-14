@@ -41,6 +41,6 @@ TShared<T> TMakeShared(Args&&... args) {
 
 // redefine the make unique function
 template <typename T, typename... Args>
-TShared<T> TMakeUnique(Args&&... args) {
+TUnique<T> TMakeUnique(Args&&... args) {
 	return std::make_unique<T>(std::forward<Args>(args)...);
 }

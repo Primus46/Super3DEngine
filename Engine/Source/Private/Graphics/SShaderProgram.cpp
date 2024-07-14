@@ -2,6 +2,7 @@
 #include "Debugging/SDebug.h"
 #include "Math/SSTTransform.h"
 #include "Graphics/STexture.h"
+#include "Graphics/SSTCamera.h"
 
 // External Libs
 #include <GLEW/glew.h>
@@ -74,6 +75,45 @@ void SShaderProgram::SetModelTransform(const SSTTransform& transform)
 		varID, 1, GL_FALSE, glm::value_ptr(matrixT)
 	);
  }
+
+void SShaderProgram::SetWorldTransform(const TShared<SSTCamera>& camera)
+{
+	// initialise a matrix
+	glm::mat4 matrixT = glm::mat4(1.0f);
+
+	// handle the view matrix
+
+	// translate the matrix based on camera position
+	matrixT = glm::translate(matrixT, camera->transform.position);
+
+	// find the variable in the shader and update it
+	int varID = glGetUniformLocation(m_programID, "view");
+
+	// update the value
+	glUniformMatrix4fv(
+		varID, 1, GL_FALSE, glm::value_ptr(matrixT)
+	);
+
+	// handle the projection matrix
+
+	// set the projection matrix to a perpective view
+	matrixT = glm::perspective(
+		glm::radians(camera->fov), // the zoom of your camera
+		camera->aspectRatio, // how wide the view is
+		camera->nearClip, // how close you can see 3D models
+		camera->farClip // how far you can see 3D models - all other models will not render
+	);
+
+	// find the variable in the shader for the projection matrix
+	varID = glGetUniformLocation(m_programID, "projection");
+
+	// update the project matrix in the shader
+	glUniformMatrix4fv(
+		varID, 1, GL_FALSE, glm::value_ptr(matrixT)
+	);
+
+
+}
 
 void SShaderProgram::RunTexture(const TShared<STexture>& texture, const SUi32& slot)
 {

@@ -101,6 +101,7 @@
     <ClCompile Include="ExternalLibs\Includes\STB_IMAGE\stb_image.cpp" />
     <ClCompile Include="Source\Private\Graphics\SGraphicsEngine.cpp" />
     <ClCompile Include="Source\Private\Graphics\SMesh.cpp" />
+    <ClCompile Include="Source\Private\Graphics\SModel.cpp" />
     <ClCompile Include="Source\Private\Graphics\SShaderProgram.cpp" />
     <ClCompile Include="Source\Private\Listeners\SInput.cpp" />
     <ClCompile Include="Source\Private\SWindow.cpp" />
@@ -113,7 +114,9 @@
     <ClInclude Include="Source\Public\EngineTypes.h" />
     <ClInclude Include="Source\Public\Graphics\SGraphicsEngine.h" />
     <ClInclude Include="Source\Public\Graphics\SMesh.h" />
+    <ClInclude Include="Source\Public\Graphics\SModel.h" />
     <ClInclude Include="Source\Public\Graphics\SShaderProgram.h" />
+    <ClInclude Include="Source\Public\Graphics\SSTCamera.h" />
     <ClInclude Include="Source\Public\Graphics\STexture.h" />
     <ClInclude Include="Source\Public\Listeners\SInput.h" />
     <ClInclude Include="Source\Public\Math\SSTTransform.h" />

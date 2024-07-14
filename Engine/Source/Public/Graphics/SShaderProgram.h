@@ -10,6 +10,7 @@ enum SEShaderType : SUi8 {
 };
 
 struct  SSTTransform;
+struct SSTCamera;
 
 class SShaderProgram {
 public:
@@ -25,6 +26,9 @@ public:
 
 	// set teh transform of the model in the shader
 	void SetModelTransform(const SSTTransform& transform);
+
+	// set the 3D coordinates for the model
+	void SetWorldTransform(const TShared<SSTCamera>& camera);
 
 	// set a texture in the shader based on the shot
 	void RunTexture(const TShared<STexture>& texture, const SUi32& slot);
