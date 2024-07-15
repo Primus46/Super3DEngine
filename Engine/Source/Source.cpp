@@ -6,6 +6,7 @@
 // Engine Libs
 #include "SWindow.h"
 #include "Listeners/SInput.h"
+#include "Graphics/SSTCamera.h"
 
 // -- smart pointers delete themselves when there is no owner reference
 // shared pointer = shares ownership across all references
@@ -14,7 +15,7 @@
 
 // source variables
 TShared<SWindow> m_window;
-TUnique<SInput> m_input;
+TShared<SInput> m_input;
 
 // source functions
 bool Initialise()
@@ -47,8 +48,9 @@ bool Initialise()
 		720, 720 }))
 		return false;
 
-	// m_input = TMakeUnique<SInput>();
-	// m_input->InitInput(m_window);
+	// create the input class and assign the window
+	m_input = TMakeShared<SInput>();
+	m_input->InitInput(m_window);
 
 	return true;
 }
@@ -65,16 +67,13 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
+	// register the window inputs
+	m_window->RegisterInput(m_input);
+
 	// keep the game open as long as the window is open
 	while (!m_window->IsPendingClose()) {
-		// TO DO: Game Loop
-		SDL_Event e;
-
-		while (SDL_PollEvent(&e)){
-			if (e.type == SDL_QUIT) {
-				m_window->CloseWindow();
-			}
-		}
+		// handle inputs
+		m_input->UpdateInputs();
 
 		// render the window
 		m_window->Render();

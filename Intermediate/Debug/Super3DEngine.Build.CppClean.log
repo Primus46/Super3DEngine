@@ -1,10 +1,17 @@
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\vc143.pdb
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\vc143.idb
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\source.obj
+c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\stexture.obj
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\swindow.obj
-c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\super3dengine.ilk
+c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\sinput.obj
+c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\sshaderprogram.obj
+c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\smodel.obj
+c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\smesh.obj
+c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\sgraphicsengine.obj
+c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\stb_image.obj
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\build\debug\super3dengine.exe
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\build\debug\super3dengine.pdb
+c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\super3dengine.ilk
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\engine.vcxproj.filelistabsolute.txt
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\engine.tlog\cl.command.1.tlog
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\engine.tlog\cl.items.tlog
@@ -12,4 +19,5 @@ c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\s
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\engine.tlog\cl.write.1.tlog
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\engine.tlog\link.command.1.tlog
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\engine.tlog\link.read.1.tlog
+c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\engine.tlog\link.secondary.1.tlog
 c:\users\conno\documents\ait\year 2\advanced game engine programming\classwork\super3dengine\intermediate\debug\engine.tlog\link.write.1.tlog

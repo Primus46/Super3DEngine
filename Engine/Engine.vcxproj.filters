@@ -80,5 +80,8 @@
     <ClInclude Include="Source\Public\Graphics\SSTCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Public\Listeners\SEvents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

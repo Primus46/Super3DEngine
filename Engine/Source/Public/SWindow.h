@@ -1,10 +1,9 @@
 #pragma once
-
-// System Libs
-#include <iostream>
-#include <string>
+#include "EngineTypes.h"
+#include "Math/SSTTransform.h"
 
 class SGraphicsEngine;
+class SInput;
 
 struct SSTWindowParams {
 	SSTWindowParams() {
@@ -54,6 +53,8 @@ public:
 	// close if the window has been set to close
 	bool IsPendingClose() { return m_shouldClose; }
 
+	void RegisterInput(const TShared<SInput>& m_input);
+
 	// render the graphics engine
 	void Render();
 
@@ -68,5 +69,8 @@ private:
 	bool m_shouldClose;
 
 	// store the graphics engine
-	std::unique_ptr<SGraphicsEngine> m_graphicsEngine;
+	TUnique<SGraphicsEngine> m_graphicsEngine;
+
+	// direction to move the camera
+	glm::vec3 m_cameraDirection;
 };

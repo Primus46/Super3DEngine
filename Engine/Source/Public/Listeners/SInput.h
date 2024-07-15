@@ -1,5 +1,6 @@
 #pragma once
 #include "EngineTypes.h"
+#include "Listeners/SEvents.h"
 
 // External Libs
 #include "SDL/SDL_keyboard.h"
@@ -16,6 +17,19 @@ public:
 
 	// Updating the inputs
 	void UpdateInputs();
+
+	// On a pressed event
+	TShared<SEvents<SDL_Scancode>> OnKeyPressed;
+
+	// On a released event
+	TShared<SEvents<SDL_Scancode>> OnKeyReleased;
+
+	// On a pressed event
+	TShared<SEvents<>> OnMousePressed;
+
+	// On a released event
+	TShared<SEvents<>> OnMouseReleased;
+
 
 private:
 	// weak pionter to the window to not count as a reference

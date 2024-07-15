@@ -118,6 +118,7 @@
     <ClInclude Include="Source\Public\Graphics\SShaderProgram.h" />
     <ClInclude Include="Source\Public\Graphics\SSTCamera.h" />
     <ClInclude Include="Source\Public\Graphics\STexture.h" />
+    <ClInclude Include="Source\Public\Listeners\SEvents.h" />
     <ClInclude Include="Source\Public\Listeners\SInput.h" />
     <ClInclude Include="Source\Public\Math\SSTTransform.h" />
     <ClInclude Include="Source\Public\SWindow.h" />

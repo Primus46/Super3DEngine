@@ -17,6 +17,10 @@ public:
 	// render the gaphics engine
 	void Render(SDL_Window* sdlWindow);
 
+	// retur a weak versipn of the camera
+	TWeak<SSTCamera> GetCamera() { return m_camera; }
+
+
 private:
 	// storing memoery location for open gl context
 	SDL_GLContext m_sdlGLContext;
