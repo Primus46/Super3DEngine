@@ -24,16 +24,36 @@ public:
 	// On a released event
 	TShared<SEvents<SDL_Scancode>> OnKeyReleased;
 
-	// On a pressed event
-	TShared<SEvents<>> OnMousePressed;
+	// On Mouse Move
+	// @param1: x position of the mouse
+	// @param2: y position of the mouse
+	// @param3: x position of the mouse relative to last x position
+	// @param4: y position of the mouse relative to last y position
+	TShared<SEvents<float, float, float, float>> OnMouseMove;
 
-	// On a released event
-	TShared<SEvents<>> OnMouseReleased;
+	// when the mouse scrolls pass the delta
+	TShared<SEvents<float>> OnMouseScroll;
+
+	// listen for mouse pressed events
+	TShared<SEvents<SUi8>> OnMousePressed;
+
+	// listen for mouse released events
+	TShared<SEvents<SUi8>> OnMouseReleased;
+
+	// hide mouse
+	// this will also make sure the mouse is centered to the screen when moving
+	void ShowCursor(const bool& enable);
+
+	// Get the state of the cursor
+	bool IsCursorHidden();
 
 
 private:
 	// weak pionter to the window to not count as a reference
 	// so that the input doesn't control if the window gets destroyed or not
 	TWeak<SWindow> m_window;
+
+	// last mouse motion event
+	SDL_MouseMotionEvent m_lastMotion;
 
 };

@@ -15,6 +15,9 @@ public:
 	// create a polygon model and add a texture to it
 	void MakePoly(const TShared<STexture>& texture);
 
+	// create a pyramid model and add a texture to it
+	void MakePyramid(const TShared<STexture>& texture);
+
 	// create a cube model and add a texture to it
 	void MakeCube(const TShared<STexture>& texture);
 

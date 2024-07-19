@@ -59,7 +59,7 @@ void SShaderProgram::SetModelTransform(const SSTTransform& transform)
 	// translate the matrix
 	matrixT = glm::translate(matrixT, transform.position);
 
-	// rotate
+	// rotate per axis
 	matrixT = glm::rotate(matrixT, glm::radians(transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 	matrixT = glm::rotate(matrixT, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 	matrixT = glm::rotate(matrixT, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -82,9 +82,15 @@ void SShaderProgram::SetWorldTransform(const TShared<SSTCamera>& camera)
 	glm::mat4 matrixT = glm::mat4(1.0f);
 
 	// handle the view matrix
+	// matrixT = glm::translate(matrixT, camera->transform.position);
 
 	// translate the matrix based on camera position
-	matrixT = glm::translate(matrixT, camera->transform.position);
+	matrixT = glm::lookAt(
+		camera->transform.position,
+		camera->transform.position + camera->transform.Forward(),
+		camera->transform.Up()
+
+	);
 
 	// find the variable in the shader and update it
 	int varID = glGetUniformLocation(m_programID, "view");
