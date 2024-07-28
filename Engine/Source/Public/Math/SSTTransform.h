@@ -11,6 +11,13 @@ struct SSTTransform {
 		scale = glm::vec3(1.0f);
 	}
 
+	SSTTransform(const glm::vec3& p, const glm::vec3& r, const glm::vec3& s) {
+		position = p;
+		rotation = r;
+		scale = s;
+	}
+
+
 	// get the forward vector of the local rotation
 	glm::vec3 Forward() {
 		glm::vec3 forward = glm::vec3(0.0f);
@@ -55,6 +62,19 @@ struct SSTTransform {
 
 		return up;
 	}
+	
+	SSTTransform operator+(const SSTTransform& other) const {
+		return {
+			position + other.position,
+			rotation + other.rotation,
+			scale + other.scale
+		};
+	}
+	
+	SSTTransform& operator+=(const SSTTransform& other) {
+		return *this = *this + other;
+	}
+
 
 	glm::vec3 position;
 	glm::vec3 rotation;

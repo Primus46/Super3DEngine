@@ -8,6 +8,7 @@
 SMesh::SMesh()
 {
 	m_vao = m_vbo = m_eab = 0;
+	m_matTransform = glm::mat4(1.0f);
 	SDebug::Log("Mesh created");
 }
 
@@ -140,6 +141,9 @@ void SMesh::Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTrans
 
 	// update the transform of the mesh based on the model transform
 	shader->SetModelTransform(transform);
+
+	// set the relative transform for the mesh in our shader
+	shader->SetMeshTransform(m_matTransform);
 
 	// binding this mesh as the active vao
 	glBindVertexArray(m_vao);

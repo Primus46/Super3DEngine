@@ -1,7 +1,12 @@
 #pragma once
 #include "EngineTypes.h"
 
+// External Libs
+#include <GLM/mat4x4.hpp>
+
+
 class STexture;
+struct SSTCamera;
 
 // enum to determine the type of shader
 enum SEShaderType : SUi8 {
@@ -10,7 +15,6 @@ enum SEShaderType : SUi8 {
 };
 
 struct  SSTTransform;
-struct SSTCamera;
 
 class SShaderProgram {
 public:
@@ -24,7 +28,9 @@ public:
 	// you can't change values in a shader without activating it
 	void Activate();
 
-	// set teh transform of the model in the shader
+	void SetMeshTransform(const glm::mat4& matTransform);
+
+	// set the transform of the model in the shader
 	void SetModelTransform(const SSTTransform& transform);
 
 	// set the 3D coordinates for the model

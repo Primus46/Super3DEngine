@@ -14,7 +14,6 @@
 
 // test for debug
 TUnique<SModel> m_model;
-TUnique<SModel> m_model2;
 
 bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 {
@@ -93,9 +92,9 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 
 	// DEBUG
 	m_model = TMakeUnique<SModel>();
-	m_model->MakeCube(defaultTexture);
-	m_model2 = TMakeUnique<SModel>();
-	m_model2->MakePyramid(defaultTexture);
+	m_model->ImportModel("Models/Lambo/Lambo.fbx");
+	m_model->GetTransform().scale = glm::vec3(0.1f);
+	m_model->GetTransform().position.z += 50.0f;
 
 
 
@@ -111,13 +110,13 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// set background colour
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 1.0f, 0.5f, 1.0f);
 	// clear the back buffer with a solid colour
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// m_model->GetTransform().position.x = -2.0f;
 
-	// m_model->GetTransform().rotation.x += 0.01f;
+	//m_model->GetTransform().rotation.x += 0.01f;
 	m_model->GetTransform().rotation.y += 0.01f;
 	//m_model->GetTransform().rotation.z += 0.01f;
 
@@ -131,11 +130,6 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 	// models will update their own positions in the mesh based on the transform
 	m_model->Render(m_shader);
 
-	// m_model2->GetTransform().position.x = 2.0f;
-
-	// m_model2->GetTransform().rotation.y -= 0.01f;
-
-	// m_model2->Render(m_shader);
 
 	// presented the frame to the window
 	// swaping the back buffer with the front buffer
