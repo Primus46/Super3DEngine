@@ -9,13 +9,9 @@ SMesh::SMesh()
 {
 	m_vao = m_vbo = m_eab = 0;
 	m_matTransform = glm::mat4(1.0f);
-	SDebug::Log("Mesh created");
 }
 
-SMesh::~SMesh()
-{
-	SDebug::Log("Mesh destroyed");
-}
+SMesh::~SMesh(){}
 
 bool SMesh::CreateMesh(const std::vector<SSTVertexData>& vertices, const std::vector<uint32_t>& indices)
 {
@@ -124,6 +120,19 @@ bool SMesh::CreateMesh(const std::vector<SSTVertexData>& vertices, const std::ve
 		(void*)(sizeof(float) * 6) // how many numbers to skip in bytes
 	);
 
+	// pass out the vertex data in seperate formats
+	glEnableVertexAttribArray(3);
+
+	// set the texture coordinates of that data to the 1 index of the attribute array
+	glVertexAttribPointer(
+		3, // location to store data in the atttribute array
+		3, // how many numbers to pass into the attribute array index
+		GL_FLOAT, // the type of data to store
+		GL_FALSE, // should we normalise the valuse, generally no
+		sizeof(SSTVertexData), // how big is each data array in a vertex
+		(void*)(sizeof(float) * 8) // how many numbers to skip in bytes
+	);
+
 	// common practice to clear the vao from the GPU
 	glBindVertexArray(0);
 
@@ -131,7 +140,8 @@ bool SMesh::CreateMesh(const std::vector<SSTVertexData>& vertices, const std::ve
 
 }
 
-void SMesh::Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform)
+void SMesh::Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform, 
+	const TArray<TShared<SSTLight>>& lights)
 {
 	// does a texture exist
 	if (m_texture) {
@@ -144,6 +154,9 @@ void SMesh::Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTrans
 
 	// set the relative transform for the mesh in our shader
 	shader->SetMeshTransform(m_matTransform);
+
+	// set the lights in the shader for the mesh
+	shader->SetLights(lights);
 
 	// binding this mesh as the active vao
 	glBindVertexArray(m_vao);

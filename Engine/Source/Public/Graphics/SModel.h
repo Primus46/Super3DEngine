@@ -11,6 +11,7 @@ class STexture;
 class SShaderProgram;
 struct aiScene;
 struct aiNode;
+struct SSTLight;
 
 class SModel {
 public:
@@ -32,7 +33,7 @@ public:
 
 	// render all of the meshes within the model
 	// transform of meshes will be based on the model transformations
-	void Render(const TShared<SShaderProgram>& shader);
+	void Render(const TShared<SShaderProgram>& shader, const TArray<TShared<SSTLight>>& lights);
 
 	// get the transform of the model
 	SSTTransform& GetTransform() { return m_transform; }
@@ -40,7 +41,7 @@ public:
 private:
 	// find all of the meshes in a scene and convert them to a SMesh
 	bool FindAndImportMeshes(const aiNode& node, const aiScene& scene, 
-		const aiMatrix4x4& parentTransform);
+		const aiMatrix4x4& parentTransform, SUi32* meshesCreated);
 
 private:
 	// array of meshes

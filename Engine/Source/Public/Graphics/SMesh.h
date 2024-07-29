@@ -8,6 +8,7 @@
 class SShaderProgram;
 struct SSTTransform;
 class STexture;
+struct SSTLight;
 
 struct SSTVertexData {
 	// 0 = x, 
@@ -39,7 +40,7 @@ public:
 	bool CreateMesh(const std::vector<SSTVertexData>& vertices, const std::vector<uint32_t>& indices);
 
 	// draw the mesh to the renderer
-	void Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform);
+	void Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform, const TArray<TShared<SSTLight>>& lights);
 
 	// set the texture in the mesh
 	void SetTexture(const TShared<STexture>& texture) { m_texture = texture; }

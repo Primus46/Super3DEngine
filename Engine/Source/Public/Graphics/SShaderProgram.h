@@ -7,6 +7,7 @@
 
 class STexture;
 struct SSTCamera;
+struct SSTLight;
 
 // enum to determine the type of shader
 enum SEShaderType : SUi8 {
@@ -38,6 +39,9 @@ public:
 
 	// set a texture in the shader based on the shot
 	void RunTexture(const TShared<STexture>& texture, const SUi32& slot);
+
+	// set the lights in the shader
+	void SetLights(const TArray<TShared<SSTLight>>& lights);
 
 private:
 	// import a shader based on the shader type

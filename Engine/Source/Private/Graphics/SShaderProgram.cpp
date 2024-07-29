@@ -3,6 +3,7 @@
 #include "Math/SSTTransform.h"
 #include "Graphics/STexture.h"
 #include "Graphics/SSTCamera.h"
+#include "Graphics/SSTLight.h"
 
 // External Libs
 #include <GLEW/glew.h>
@@ -13,6 +14,10 @@
 #include <sstream>
 
 #define SGET_GLEW_ERROR reinterpret_cast<const char*>(glewGetErrorString(glGetError()));
+
+// constant value for light amounts
+const SUi32 maxDirLights = 2;
+const SUi32 maxPointLights = 20;
 
 SShaderProgram::SShaderProgram()
 {
@@ -152,6 +157,60 @@ void SShaderProgram::RunTexture(const TShared<STexture>& texture, const SUi32& s
 	// update the shader
 	glUniform1i(varID, slot);
 
+}
+
+void SShaderProgram::SetLights(const TArray<TShared<SSTLight>>& lights)
+{
+	SUi32 dirLights = 0;
+	SUi32 pointLights = 0;
+	int varID = 0;
+
+	// loop through all of the lights and add them to the shader
+	for (SUi32 i = 0; i < lights.size(); ++i) {
+		if (const TShared<SSTDirLight> lightRef = std::dynamic_pointer_cast<SSTDirLight>(lights[i])) {
+			// ignore the light if we have already maxed out 
+			if (dirLights >= maxDirLights) {
+				continue;
+			}
+
+			// add a dir light and use as index
+			SString lightsIndexStr = "dirLights[" + std::to_string(dirLights) + "]";
+			
+			//_________COLOUR
+			// get the colour variable from the dir light struct in the shader
+			varID = glGetUniformLocation(m_programID, 
+				(lightsIndexStr + ".colour").c_str());
+
+			// change the colour
+			glUniform3fv(varID, 1, glm::value_ptr(lightRef->colour));
+
+			//_________AMBIENT
+			// get the ambient variable from the dir light struct in the shader
+				varID = glGetUniformLocation(m_programID,
+					(lightsIndexStr + ".ambient").c_str());
+
+			// change the ambient
+			glUniform3fv(varID, 1, glm::value_ptr(lightRef->ambient));
+
+			//_________DIRECTION
+			// get the direction variable from the dir light struct in the shader
+			varID = glGetUniformLocation(m_programID,
+				(lightsIndexStr + ".direction").c_str());
+
+			// change the direction
+			glUniform3fv(varID, 1, glm::value_ptr(lightRef->direction));
+
+			//_________INTENSITY
+			// get the colour intensity from the dir light struct in the shader
+			varID = glGetUniformLocation(m_programID,
+				(lightsIndexStr + ".intensity").c_str());
+
+			// change the intensity
+			glUniform1f(varID, lightRef->intensity);
+
+			++dirLights;
+		}
+	}
 }
 
 bool SShaderProgram::ImportShaderByType(const SString& filePath, SEShaderType shaderType)

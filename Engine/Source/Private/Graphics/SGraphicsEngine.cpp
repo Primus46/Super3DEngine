@@ -4,6 +4,7 @@
 #include "Math/SSTTransform.h"
 #include "Graphics/STexture.h"
 #include "Graphics/SSTCamera.h"
+#include "Graphics/SSTLight.h"
 
 
 // External Libs
@@ -80,7 +81,7 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 
 	// create the camera
 	m_camera = TMakeShared<SSTCamera>();
-	m_camera->transform.position.z -= 5.0f;
+	m_camera->transform.position.z -= 25.0f;
 
 	// creates the texture object
 	TShared<STexture> defaultTexture = TMakeShared<STexture>();
@@ -92,11 +93,14 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 
 	// DEBUG
 	m_model = TMakeUnique<SModel>();
-	m_model->ImportModel("Models/Lambo/Lambo.fbx");
-	m_model->GetTransform().scale = glm::vec3(0.1f);
-	m_model->GetTransform().position.z += 50.0f;
+	m_model->ImportModel("Models/Helmet3/Helmet3.fbx");
+	m_model->GetTransform().scale = glm::vec3(1.0f);
 
 
+	TShared<SSTDirLight> dirLight = TMakeShared<SSTDirLight>();
+	dirLight->colour = glm::vec3(1.0f, 0.0f, 0.5f);
+	dirLight->direction = glm::vec3(0.0f, -1.0f, 0.0f);
+	m_lights.push_back(dirLight);
 
 	// log the success of the graphics engine init
 	SDebug::Log("Successfully initialised graphics engine", ST_SUCCESS);
@@ -128,7 +132,7 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 
 	// rendered custom graphics
 	// models will update their own positions in the mesh based on the transform
-	m_model->Render(m_shader);
+	m_model->Render(m_shader, m_lights);
 
 
 	// presented the frame to the window

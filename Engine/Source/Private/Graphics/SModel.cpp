@@ -160,25 +160,30 @@ void SModel::ImportModel(const SString& filePath)
 	// set the scale to x1, y1, z1
 	aiMatrix4x4::Scaling({ 1.0f, 1.0f, 1.0f }, sceneTransform);
 
+	// meshes counts
+	SUi32 meshesCreated = 0;
+
 	// find all meshes in the scene and fail if any of them fail
-	if (!FindAndImportMeshes(*scene->mRootNode, *scene, sceneTransform)) {
+	if (!FindAndImportMeshes(*scene->mRootNode, *scene, sceneTransform, &meshesCreated)) {
 		SDebug::Log("Model failed to convert ASSIMP scene " + filePath, ST_ERROR);
 		return;
 	}
+
+	SDebug::Log("Model has imported with " + std::to_string(meshesCreated) + " meshes", ST_SUCCESS);
 
 	// log the success of the model
 	SDebug::Log("Model successfully imported from: " + filePath, ST_SUCCESS);
 }
 
-void SModel::Render(const TShared<SShaderProgram>& shader)
+void SModel::Render(const TShared<SShaderProgram>& shader, const TArray<TShared<SSTLight>>& lights)
 {
 	for(const auto& mesh : m_meshStack) {
-		mesh->Render(shader, m_transform);
+		mesh->Render(shader, m_transform, lights);
 	}
 }
 
 bool SModel::FindAndImportMeshes(const aiNode& node, const aiScene& scene, 
-	const aiMatrix4x4& parentTransform)
+	const aiMatrix4x4& parentTransform, SUi32* meshesCreated)
 {
 	// looping through all the meshes in the node
 	for (SUi32 i = 0; i < node.mNumMeshes; ++i) {
@@ -279,6 +284,9 @@ bool SModel::FindAndImportMeshes(const aiNode& node, const aiScene& scene,
 
 		// add the new mesh to the mesh stack
 		m_meshStack.push_back(std::move(sMesh));
+
+		// count the meshes created
+		++*meshesCreated;
 	}
 
 	// adding the relative transoform to the parent transform
@@ -287,7 +295,7 @@ bool SModel::FindAndImportMeshes(const aiNode& node, const aiScene& scene,
 	// loop through all of the children nodes inside this node
 	for (SUi32 i = 0; i < node.mNumChildren; ++i) {
 		// recursively call this function to find all of the meshes in the children nodes
-		if (!FindAndImportMeshes(*node.mChildren[i], scene, nodeRelTansform)) {
+		if (!FindAndImportMeshes(*node.mChildren[i], scene, nodeRelTansform, meshesCreated)) {
 			return false;
 		}
 	}

@@ -6,6 +6,7 @@ struct SDL_Window;
 class SMesh;
 class SShaderProgram;
 struct SSTCamera;
+struct SSTLight;
 
 class SGraphicsEngine {
 public:
@@ -30,4 +31,7 @@ private:
 
 	// store the camera
 	TShared<SSTCamera> m_camera;
+
+	// stores all lights in the engine
+	TArray<TShared<SSTLight>> m_lights;
 };

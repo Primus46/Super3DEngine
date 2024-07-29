@@ -1,4 +1,17 @@
-﻿  SGameEngine.cpp
+﻿  stb_image.cpp
+  SObject.cpp
+  SGameEngine.cpp
+  SGraphicsEngine.cpp
+  SMesh.cpp
+  SModel.cpp
+C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Engine\Source\Private\Graphics\SModel.cpp(210,30): warning C4244: 'argument': conversion from 'SUi64' to 'unsigned int', possible loss of data
+C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Engine\Source\Private\Graphics\SModel.cpp(220,32): warning C4244: 'argument': conversion from 'SUi64' to 'unsigned int', possible loss of data
+  SShaderProgram.cpp
+  SInput.cpp
+  SWindow.cpp
+  STexture.cpp
+  Source.cpp
+  Generating Code...
   Engine.vcxproj -> C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Build\Debug\Super3DEngine.exe
   C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Engine\ExternalLibs\LIBS\assimp-vc143-mtd.dll
   C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Engine\ExternalLibs\LIBS\glew32.dll
