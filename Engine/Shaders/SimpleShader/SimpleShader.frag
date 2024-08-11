@@ -81,7 +81,7 @@ void main() {
 		specular *= material.specularStrength;
 
 		// add light values together to get the result
-		result += ambientLight + lightColour + specular;
+		result += (ambientLight + lightColour + specular);
 	}
 
 	//------------Point Lights------------
@@ -124,7 +124,7 @@ void main() {
 		specular *= material.specularStrength;
 
 		// add light values together to get the result
-		result += lightColour + specular;
+		result += (lightColour + specular);
 	}
 
 	finalColour = vec4(result, 1.0f);
