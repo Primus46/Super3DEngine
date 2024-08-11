@@ -12,20 +12,13 @@ class SShaderProgram;
 struct aiScene;
 struct aiNode;
 struct SSTLight;
+struct SSTMaterial;
 
 class SModel {
 public:
 	SModel() = default;
 	~SModel() = default;
 
-	// create a polygon model and add a texture to it
-	void MakePoly(const TShared<STexture>& texture);
-
-	// create a pyramid model and add a texture to it
-	void MakePyramid(const TShared<STexture>& texture);
-
-	// create a cube model and add a texture to it
-	void MakeCube(const TShared<STexture>& texture);
 
 	// import a 3D model from a file
 	// uses the ASSIMP import library, check docs to know which file types accepted
@@ -38,6 +31,9 @@ public:
 	// get the transform of the model
 	SSTTransform& GetTransform() { return m_transform; }
 
+	// set a material by the slot number
+	void SetMaterialBySlot(unsigned int slot, const TShared<SSTMaterial>& material);
+
 private:
 	// find all of the meshes in a scene and convert them to a SMesh
 	bool FindAndImportMeshes(const aiNode& node, const aiScene& scene, 
@@ -46,6 +42,9 @@ private:
 private:
 	// array of meshes
 	TArray <TUnique<SMesh>> m_meshStack;
+
+	// array of materials for the model
+	TArray<TShared<SSTMaterial>> m_materialsStack;
 
 	// transfor for the model in 3D space
 	SSTTransform m_transform;

@@ -5,10 +5,11 @@
 // External Libs
 #include <GLEW/glew.h>
 
-SMesh::SMesh()
+SMesh::SMesh() 
 {
 	m_vao = m_vbo = m_eab = 0;
 	m_matTransform = glm::mat4(1.0f);
+
 }
 
 SMesh::~SMesh(){}
@@ -141,13 +142,10 @@ bool SMesh::CreateMesh(const std::vector<SSTVertexData>& vertices, const std::ve
 }
 
 void SMesh::Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform, 
-	const TArray<TShared<SSTLight>>& lights)
+	const TArray<TShared<SSTLight>>& lights, const TShared<SSTMaterial>& material)
 {
-	// does a texture exist
-	if (m_texture) {
-		// run the texture
-		shader->RunTexture(m_texture, 0);
-	}
+	// update the material in the shader
+	shader->SetMaterial(material);
 
 	// update the transform of the mesh based on the model transform
 	shader->SetModelTransform(transform);

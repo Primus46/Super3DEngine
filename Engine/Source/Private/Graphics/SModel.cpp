@@ -6,132 +6,6 @@
 #include <ASSIMP/postprocess.h>
 #include <ASSIMP/mesh.h>
 
-std::vector<SSTVertexData> polyVData = {
-	//	 x	   y	 z        r     g     b	      tx	ty
-	// square
-	{ {-0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} },// vertx data 1 - top left
-	{ { 0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} }, // vertx data 2 - top right
-	{ {-0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} }, // vertx data 3 - bottom left
-	{ { 0.5f, -0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} }, // vertx data 4 - bottom right
-
-};
-
-std::vector<uint32_t> polyIData = {
-	0, 1, 2, // triangle 1
-	1, 2, 3, // triangle 2
-};
-
-std::vector<SSTVertexData> pyramidVData = {
-	//	 x	   y	 z        r     g     b	      tx	ty
-	// pyramid
-	
-};
-
-std::vector<uint32_t> pyramidIData = {
-};
-
-
-std::vector<SSTVertexData> cubeVData = {
-	//	  x      y      z         r     g     b         tx    ty
-	//cube
-	{ { -1.0f,  1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }, // f 1 top left - 0
-	{ {	 1.0f,  1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } }, // f 2 top right - 1
-	{ { -1.0f, -1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } }, // f 3 bottom left - 2
-	{ {  1.0f, -1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }, // f 4 bottom right - 3
-
-	{ {  1.0f,  1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }, // b 1 top right - 4
-	{ {	-1.0f,  1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } }, // b 2 top left - 5
-	{ {  1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } }, // b 3 bottom right - 6
-	{ { -1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }, // b 4 bottom left - 7
-
-	{ { -1.0f,  1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } }, // l 1 top left - 8
-	{ {	 1.0f,  1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }, // l 2 top right - 9
-	{ { -1.0f, -1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }, // l 3 bottom left - 10
-	{ {  1.0f, -1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } }, // l 4 bottom right - 11
-
-	{ {  1.0f,  1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } }, // r 1 top right - 12
-	{ {	-1.0f,  1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }, // r 2 top left - 13
-	{ {  1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }, // r 3 bottom right - 14
-	{ { -1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } }, // r 4 bottom left - 15
-
-	{ { -1.0f,  1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } }, // t 1 top left - 16
-	{ {	 1.0f,  1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }, // t 2 top right - 17
-	{ { -1.0f, -1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }, // t 3 bottom left - 18
-	{ {  1.0f, -1.0f,  1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } }, // t 4 bottom right - 19
-
-	{ {  1.0f,  1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } }, // bt 1 top right - 20
-	{ {	-1.0f,  1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }, // bt 2 top left - 21
-	{ {  1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }, // bt 3 bottom right - 22
-	{ { -1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } }  // bt 4 bottom left - 23
-};
-
-std::vector<uint32_t> cubeIData = {
-	0, 1, 2, // f triangle 1
-	1, 2, 3, // f triangle 2
-
-	4, 5, 6, // b triangle 1
-	5, 6, 7, // b triangle 2
-
-	13, 8, 10, // l triangle 1
-	13, 15, 10, // l triangle 2
-
-	9, 12, 14, // r triangle 1
-	9, 14, 11, // r triangle 2
-
-	21, 20, 16, // t triangle 1
-	20, 17, 16, // t triangle 2
-
-	18, 19, 23, // bt triangle 1
-	23, 19, 22 // bt triangle 2
-};
-
-void SModel::MakePoly(const TShared<STexture>& texture)
-{
-	// create the mesh
-	TUnique<SMesh> mesh = TMakeUnique<SMesh>();
-
-	if (!mesh->CreateMesh(polyVData, polyIData)) {
-		SDebug::Log("Failed to create mesh");
-	}
-
-	// add the  texture and add it to the mesh stack
-	mesh->SetTexture(texture);
-	// stdmove will move the reference from the previous reference to a new one
-	// - without destroying or copying the references
-	m_meshStack.push_back(std::move(mesh));
-}
-
-void SModel::MakePyramid(const TShared<STexture>& texture)
-{
-	// create the mesh
-	TUnique<SMesh> mesh = TMakeUnique<SMesh>();
-
-	if (!mesh->CreateMesh(pyramidVData, pyramidIData)) {
-		SDebug::Log("Failed to create mesh");
-	}
-
-	// add the  texture and add it to the mesh stack
-	mesh->SetTexture(texture);
-	// stdmove will move the reference from the previous reference to a new one
-	// - without destroying or copying the references
-	m_meshStack.push_back(std::move(mesh));
-}
-
-void SModel::MakeCube(const TShared<STexture>& texture)
-{
-	// create the mesh
-	TUnique<SMesh> mesh = TMakeUnique<SMesh>();
-
-	if (!mesh->CreateMesh(cubeVData, cubeIData)) {
-		SDebug::Log("Failed to create mesh");
-	}
-
-	// add the  texture and add it to the mesh stack
-	mesh->SetTexture(texture);
-	// stdmove will move the reference from the previous reference to a new one
-	// - without destroying or copying the references
-	m_meshStack.push_back(std::move(mesh));
-}
 
 void SModel::ImportModel(const SString& filePath)
 {
@@ -169,20 +43,34 @@ void SModel::ImportModel(const SString& filePath)
 		return;
 	}
 
-	SDebug::Log("Model has imported with " + std::to_string(meshesCreated) + " meshes", ST_SUCCESS);
+	// set the material stack size to the amount of materials on the model
+	m_materialsStack.resize(scene->mNumMaterials);
 
 	// log the success of the model
-	SDebug::Log("Model successfully imported from: " + filePath, ST_SUCCESS);
+	SDebug::Log("Model successfully imported with " + std::to_string(meshesCreated) + " meshes: "
+		+ filePath, ST_SUCCESS);
 }
 
 void SModel::Render(const TShared<SShaderProgram>& shader, const TArray<TShared<SSTLight>>& lights)
 {
 	for(const auto& mesh : m_meshStack) {
-		mesh->Render(shader, m_transform, lights);
+		mesh->Render(shader, m_transform, lights, m_materialsStack[mesh->materialIndex]);
 	}
 }
 
-bool SModel::FindAndImportMeshes(const aiNode& node, const aiScene& scene, 
+void SModel::SetMaterialBySlot(unsigned int slot, const TShared<SSTMaterial>& material)
+{
+	// ensure that the material slot exists
+	if (slot >= m_materialsStack.size()) {
+		SDebug::Log("No material slot exists at that index: " + std::to_string(slot), ST_WARN);
+		return;
+	}
+
+	// change the material if it does
+	m_materialsStack[slot] = material;
+}
+
+bool SModel::FindAndImportMeshes(const aiNode& node, const aiScene& scene,
 	const aiMatrix4x4& parentTransform, SUi32* meshesCreated)
 {
 	// looping through all the meshes in the node
@@ -217,7 +105,7 @@ bool SModel::FindAndImportMeshes(const aiNode& node, const aiScene& scene,
 			// texture coordinates can have multiple sets
 			// the first array index is the set [0]
 			// the second array index is the vertex data
-			if (aMesh->HasTextureCoords(j)) {
+			if (aMesh->HasTextureCoords(0)) {
 				vertex.m_texCoords[0] = aMesh->mTextureCoords[0][j].x;
 				vertex.m_texCoords[1] = aMesh->mTextureCoords[0][j].y;
 			}
@@ -259,6 +147,9 @@ bool SModel::FindAndImportMeshes(const aiNode& node, const aiScene& scene,
 			SDebug::Log("Mesh failed to convert from A Mesh to S Mesh", ST_ERROR);
 			return false;
 		}
+
+		// get the material index from the assimp mesh and set our mesh index to the same
+		sMesh->materialIndex = aMesh->mMaterialIndex;
 
 		// set the relative transform for the mesh
 		aiMatrix4x4 relTransform = parentTransform * node.mTransformation;

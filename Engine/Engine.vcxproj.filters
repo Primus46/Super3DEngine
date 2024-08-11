@@ -101,5 +101,8 @@
     <ClInclude Include="Source\Public\Graphics\SSTLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Public\Graphics\SSTMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

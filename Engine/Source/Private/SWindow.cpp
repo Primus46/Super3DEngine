@@ -96,19 +96,19 @@ void SWindow::RegisterInput(const TShared<SInput>& m_input)
 		}
 
 		if (key == SDL_SCANCODE_W) {
-			m_cameraDirection.z += -1.0f;
-		}
-
-		if (key == SDL_SCANCODE_S) {
 			m_cameraDirection.z += 1.0f;
 		}
 
+		if (key == SDL_SCANCODE_S) {
+			m_cameraDirection.z += -1.0f;
+		}
+
 		if (key == SDL_SCANCODE_A) {
-			m_cameraDirection.x += 1.0f;
+			m_cameraDirection.x += -1.0f;
 		}
 
 		if (key == SDL_SCANCODE_D) {
-			m_cameraDirection.x += -1.0f;
+			m_cameraDirection.x += 1.0f;
 		}
 
 		if (key == SDL_SCANCODE_E) {
@@ -122,19 +122,19 @@ void SWindow::RegisterInput(const TShared<SInput>& m_input)
 
 	m_input->OnKeyReleased->Bind([this](const SDL_Scancode& key) {
 		if (key == SDL_SCANCODE_W) {
-			m_cameraDirection.z += 1.0f;
-		}
-
-		if (key == SDL_SCANCODE_S) {
 			m_cameraDirection.z += -1.0f;
 		}
 
+		if (key == SDL_SCANCODE_S) {
+			m_cameraDirection.z += 1.0f;
+		}
+
 		if (key == SDL_SCANCODE_A) {
-			m_cameraDirection.x += -1.0f;
+			m_cameraDirection.x += 1.0f;
 		}
 
 		if (key == SDL_SCANCODE_D) {
-			m_cameraDirection.x += 1.0f;
+			m_cameraDirection.x += -1.0f;
 		}
 
 		if (key == SDL_SCANCODE_E) {

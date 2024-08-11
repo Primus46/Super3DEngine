@@ -4,6 +4,7 @@
 #include "Graphics/STexture.h"
 #include "Graphics/SSTCamera.h"
 #include "Graphics/SSTLight.h"
+#include "Graphics/SSTMaterial.h"
 
 // External Libs
 #include <GLEW/glew.h>
@@ -137,44 +138,25 @@ void SShaderProgram::SetWorldTransform(const TShared<SSTCamera>& camera)
 
 }
 
-void SShaderProgram::RunTexture(const TShared<STexture>& texture, const SUi32& slot)
-{
-	// Bind the texture
-	texture->BindTexture(slot);
-
-	// the id for the variable in the shader
-	int varID = 0;
-
-	// get the id depending on the slot
-	switch (slot) {
-	case 0:
-		varID = glGetUniformLocation(m_programID, "colourMap");
-		break;
-	default:
-		break;
-	}
-
-	// update the shader
-	glUniform1i(varID, slot);
-
-}
-
 void SShaderProgram::SetLights(const TArray<TShared<SSTLight>>& lights)
 {
 	SUi32 dirLights = 0;
 	SUi32 pointLights = 0;
 	int varID = 0;
+	// Name of the variable array
+	// will set in the loop depending on the light type
+	SString lightsIndexStr = "";
 
 	// loop through all of the lights and add them to the shader
 	for (SUi32 i = 0; i < lights.size(); ++i) {
-		if (const TShared<SSTDirLight> lightRef = std::dynamic_pointer_cast<SSTDirLight>(lights[i])) {
+		if (const auto& lightRef = std::dynamic_pointer_cast<SSTDirLight>(lights[i])) {
 			// ignore the light if we have already maxed out 
 			if (dirLights >= maxDirLights) {
 				continue;
 			}
 
 			// add a dir light and use as index
-			SString lightsIndexStr = "dirLights[" + std::to_string(dirLights) + "]";
+			lightsIndexStr = "dirLights[" + std::to_string(dirLights) + "]";
 			
 			//_________COLOUR
 			// get the colour variable from the dir light struct in the shader
@@ -209,8 +191,110 @@ void SShaderProgram::SetLights(const TArray<TShared<SSTLight>>& lights)
 			glUniform1f(varID, lightRef->intensity);
 
 			++dirLights;
+			continue;
+		}
+		
+		if (const auto& lightRef = std::dynamic_pointer_cast<SSTPointLight>(lights[i])) {
+			// ignore the light if we have already maxed out 
+			if (pointLights >= maxPointLights) {
+				continue;
+			}
+
+			// add a point light and use as index
+			lightsIndexStr = "pointLights[" + std::to_string(pointLights) + "]";
+
+			//_________COLOUR
+			// get the colour variable from the point light struct in the shader
+			varID = glGetUniformLocation(m_programID,
+				(lightsIndexStr + ".colour").c_str());
+
+			// change the colour
+			glUniform3fv(varID, 1, glm::value_ptr(lightRef->colour));
+
+			//_________POSITION
+			// get the shader variable id
+			varID = glGetUniformLocation(m_programID,
+				(lightsIndexStr + ".position").c_str());
+
+			// update shader value
+			glUniform3fv(varID, 1, glm::value_ptr(lightRef->position));
+
+			//_________INTENSITY
+			// get the colour intensity from the point light struct in the shader
+			varID = glGetUniformLocation(m_programID,
+				(lightsIndexStr + ".intensity").c_str());
+
+			// change the intensity
+			glUniform1f(varID, lightRef->intensity);
+
+			//_________LINEAR ATTENUATION
+			// get the variable id
+			varID = glGetUniformLocation(m_programID,
+				(lightsIndexStr + ".linear").c_str());
+
+			// change the linear value
+			glUniform1f(varID, lightRef->linear);
+
+			//_________QUADRATIC ATTENUATION
+			// get the variable id
+			varID = glGetUniformLocation(m_programID,
+				(lightsIndexStr + ".quadratic").c_str());
+
+			// change the quadratic value
+			glUniform1f(varID, lightRef->quadratic);
+
+			++pointLights;
 		}
 	}
+}
+
+void SShaderProgram::SetMaterial(const TShared<SSTMaterial>& material)
+{
+	if(material == nullptr) {
+		return;
+	}
+
+	// the id for the variable in the shader
+	int varID = 0;
+	
+	//_________BASE COLOUR
+
+	// Bind the texture to the 0 index
+	material->m_baseColourMap->BindTexture(0);
+
+	// get base colour map id
+	varID = glGetUniformLocation(m_programID, "material.baseColourMap");
+
+	// update the shader
+	glUniform1i(varID, 0);
+
+	//_________SPECULAR MAP
+	if (material->m_specularMap) {
+		// bind the texture to the 1 index
+		material->m_specularMap->BindTexture(1);
+
+		// get specular Map id
+		varID = glGetUniformLocation(m_programID, "material.specularMap");
+
+		// update the shader
+		glUniform1d(varID, 1);
+	}
+
+	//_________SHININESS
+
+	// get the base colour map id
+	varID = glGetUniformLocation(m_programID, "material.shininess");
+
+	// update the shader
+	glUniform1f(varID, material->shininess);
+
+	//_________SPECULAR STRENGTH
+
+	// get the base colour map id
+	varID = glGetUniformLocation(m_programID, "material.specularStrength");
+
+	// update the shader
+	glUniform1f(varID, material->specularStrength);
 }
 
 bool SShaderProgram::ImportShaderByType(const SString& filePath, SEShaderType shaderType)

@@ -7,8 +7,8 @@
 
 class SShaderProgram;
 struct SSTTransform;
-class STexture;
 struct SSTLight;
+struct SSTMaterial;
 
 struct SSTVertexData {
 	// 0 = x, 
@@ -40,13 +40,15 @@ public:
 	bool CreateMesh(const std::vector<SSTVertexData>& vertices, const std::vector<uint32_t>& indices);
 
 	// draw the mesh to the renderer
-	void Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform, const TArray<TShared<SSTLight>>& lights);
-
-	// set the texture in the mesh
-	void SetTexture(const TShared<STexture>& texture) { m_texture = texture; }
+	void Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform, 
+		const TArray<TShared<SSTLight>>& lights, const TShared<SSTMaterial>& material);
 
 	// set the transform of the mesh relative to the model
 	void SetRelativeTransform(const glm::mat4& transform) { m_matTransform = transform; }
+
+public:
+	// the index for the material relative to the model
+	unsigned int materialIndex;
 
 private:
 	// store the vertices
@@ -63,9 +65,6 @@ private:
 
 	// store the ID for the element array object
 	uint32_t m_eab;
-
-	// texture for the mesh
-	TShared<STexture> m_texture;
 
 	// relative transform of the mesh
 	glm::mat4 m_matTransform;

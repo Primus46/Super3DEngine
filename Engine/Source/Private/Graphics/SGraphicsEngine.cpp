@@ -14,7 +14,8 @@
 
 
 // test for debug
-TUnique<SModel> m_model;
+TWeak<SModel> m_model;
+TWeak<SSTPointLight> m_pointLight;
 
 bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 {
@@ -91,16 +92,66 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 		SDebug::Log("Graphics engine default texture failed to load", ST_ERROR);
 	}
 
+
 	// DEBUG
-	m_model = TMakeUnique<SModel>();
-	m_model->ImportModel("Models/Helmet3/Helmet3.fbx");
-	m_model->GetTransform().scale = glm::vec3(1.0f);
+	m_model = ImportModel("Models/Helmet3/Helmet3.fbx");
+	
+	// creating a texture
+	TShared<STexture> tex = TMakeShared<STexture>();
+	tex->LoadTexture("head base colour", "Models/Helmet3/Textures/Head_Base_color.png");
+
+	// creating a specular texture
+	TShared<STexture> specTex = TMakeShared<STexture>();
+	specTex->LoadTexture("head spec colour", "Models/Helmet3/Textures/Head_Specular.png");
+
+	// creating a second texture
+	TShared<STexture> tex2 = TMakeShared<STexture>();
+	tex2->LoadTexture("face texture base colour", "Models/Helmet3/Textures/facetexture_Base_color.png");
+
+	// creating a second specular texture
+	TShared<STexture> specTex2 = TMakeShared<STexture>();
+	specTex2->LoadTexture("face texture spec colour", "Models/Helmet3/Textures/facetexture_Specular.png");
+
+	// creating a material
+	TShared<SSTMaterial> mat = TMakeShared<SSTMaterial>();
+	TShared<SSTMaterial> mat2 = TMakeShared<SSTMaterial>();
+	// assigning the texture to the base colour map for the material
+	mat->m_baseColourMap = tex;
+	mat->m_specularMap = specTex;
+
+	mat2->m_baseColourMap = tex2;
+	mat2->m_specularMap = specTex2;
+
+	// setting the material to the 0 slot in the model
+	m_model.lock()->SetMaterialBySlot(0, mat);
+	m_model.lock()->SetMaterialBySlot(1, mat2);
 
 
-	TShared<SSTDirLight> dirLight = TMakeShared<SSTDirLight>();
-	dirLight->colour = glm::vec3(1.0f, 0.0f, 0.5f);
-	dirLight->direction = glm::vec3(0.0f, -1.0f, 0.0f);
-	m_lights.push_back(dirLight);
+	// create the dir light
+	const auto& dirLight = CreateDirLight();
+
+	// check it exists as a reference
+	if (const auto& lightRef = dirLight.lock()) {
+		lightRef->colour = glm::vec3(0.0f, 0.0f, 0.0f);
+		lightRef->direction = glm::vec3(0.0f, -1.0f, 0.0f);
+		lightRef->ambient = glm::vec3(0.1f);
+	}
+
+	/*m_pointLight = CreatePointLight();
+	m_pointLight.lock()->position.z -= 10.0f;
+	m_pointLight.lock()->colour = glm::vec3(1.0f, 0.0f, 0.5f);
+
+	m_pointLight = CreatePointLight();
+	m_pointLight.lock()->position.z += 10.0f;
+	m_pointLight.lock()->colour = glm::vec3(0.0f, 1.0f, 0.5f);
+
+	m_pointLight = CreatePointLight();
+	m_pointLight.lock()->position.x -= 10.0f;
+	m_pointLight.lock()->colour = glm::vec3(0.0f, 1.0f, 1.0f);
+
+	m_pointLight = CreatePointLight();
+	m_pointLight.lock()->position.x += 10.0f;
+	m_pointLight.lock()->colour = glm::vec3(1.0f, 1.0f, 0.0f);*/
 
 	// log the success of the graphics engine init
 	SDebug::Log("Successfully initialised graphics engine", ST_SUCCESS);
@@ -114,15 +165,19 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// set background colour
-	glClearColor(0.0f, 1.0f, 0.5f, 1.0f);
+	//glClearColor(0.0f, 1.0f, 0.5f, 1.0f);	// cool seafoam green-ish colour
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);	
 	// clear the back buffer with a solid colour
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// m_model->GetTransform().position.x = -2.0f;
 
-	//m_model->GetTransform().rotation.x += 0.01f;
-	m_model->GetTransform().rotation.y += 0.01f;
-	//m_model->GetTransform().rotation.z += 0.01f;
+	m_model.lock()->GetTransform().rotation.x += 0.01f;
+	m_model.lock()->GetTransform().rotation.y += 0.01f;
+	m_model.lock()->GetTransform().rotation.z += 0.01f;
+
+	//m_pointLight.lock()->position.z += 0.0005f;
+
 
 	// activate the shader
 	m_shader->Activate();
@@ -132,8 +187,9 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 
 	// rendered custom graphics
 	// models will update their own positions in the mesh based on the transform
-	m_model->Render(m_shader, m_lights);
-
+	for (const auto& modelRef : m_models) {
+		modelRef->Render(m_shader, m_lights);
+	}
 
 	// presented the frame to the window
 	// swaping the back buffer with the front buffer
@@ -141,4 +197,34 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 
 	//SDebug::Log("render");
 
+}
+
+TWeak<SSTPointLight> SGraphicsEngine::CreatePointLight()
+{
+	const auto& newLight = TMakeShared<SSTPointLight>();
+	m_lights.push_back(newLight);
+
+	return newLight;
+}
+
+TWeak<SSTDirLight> SGraphicsEngine::CreateDirLight()
+{
+	const auto& newLight = TMakeShared<SSTDirLight>();
+	m_lights.push_back(newLight);
+
+	return newLight;
+}
+
+TWeak<SModel> SGraphicsEngine::ImportModel(const SString& path)
+{
+	const auto& newModel = TMakeShared<SModel>();
+	newModel->ImportModel(path);
+	m_models.push_back(newModel);
+
+	return newModel;
+}
+
+TShared<SSTMaterial> SGraphicsEngine::CreateMaterial()
+{
+	return TMakeShared<SSTMaterial>();
 }
