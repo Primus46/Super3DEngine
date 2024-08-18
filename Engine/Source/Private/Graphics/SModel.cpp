@@ -7,7 +7,7 @@
 #include <ASSIMP/mesh.h>
 
 
-void SModel::ImportModel(const SString& filePath)
+void SModel::ImportModel(const SString& filePath, const TShared<SSTMaterial>& defaultMaterial)
 {
 	// create the assimp importer
 	Assimp::Importer importer;
@@ -46,6 +46,11 @@ void SModel::ImportModel(const SString& filePath)
 	// set the material stack size to the amount of materials on the model
 	m_materialsStack.resize(scene->mNumMaterials);
 
+	// set all materials to the default material
+	for (auto& materialRef : m_materialsStack) {
+		materialRef = defaultMaterial;
+	}
+
 	// log the success of the model
 	SDebug::Log("Model successfully imported with " + std::to_string(meshesCreated) + " meshes: "
 		+ filePath, ST_SUCCESS);
@@ -54,7 +59,7 @@ void SModel::ImportModel(const SString& filePath)
 void SModel::Render(const TShared<SShaderProgram>& shader, const TArray<TShared<SSTLight>>& lights)
 {
 	for(const auto& mesh : m_meshStack) {
-		mesh->Render(shader, m_transform, lights, m_materialsStack[mesh->materialIndex]);
+		mesh->Render(shader, m_transform + m_offset, lights, m_materialsStack[mesh->materialIndex]);
 	}
 }
 

@@ -170,3 +170,26 @@ void SMesh::Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTrans
 	// clear the vao
 	glBindVertexArray(0);
 }
+
+void SMesh::Wireframe(const TShared<SShaderProgram>& shader, const SSTTransform& transform)
+{
+	// update the transform of the mesh based on the model transform
+	shader->SetModelTransform(transform);
+
+	// set the relative transform for the mesh in our shader
+	shader->SetMeshTransform(m_matTransform);
+
+	// binding this mesh as the active vao
+	glBindVertexArray(m_vao);
+
+	// render the vao
+	glDrawElements(
+		GL_LINE_LOOP, // draw the mesh as triangles
+		static_cast<GLsizei>(m_indices.size()), // how many vertices are there?
+		GL_UNSIGNED_INT, // what type of data is the index array
+		nullptr // how many are you going to skip
+	);
+
+	// clear the vao
+	glBindVertexArray(0);
+}

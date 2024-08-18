@@ -31,7 +31,7 @@ public:
 	TWeak<SSTDirLight> CreateDirLight();
 
 	// Import a model and return a weak pointer
-	TWeak<SModel> ImportModel(const SString& path);
+	TShared<SModel> ImportModel(const SString& path);
 
 	// create a material for the engine
 	TShared<SSTMaterial> CreateMaterial();
@@ -43,6 +43,9 @@ private:
 	// store the shader for the engine
 	TShared<SShaderProgram> m_shader;
 
+	// store the wireframe shader
+	TShared<SShaderProgram> m_wireShader;
+
 	// store the camera
 	TShared<SSTCamera> m_camera;
 
@@ -50,5 +53,8 @@ private:
 	TArray<TShared<SSTLight>> m_lights;
 
 	// store all models in the engine
-	TArray<TShared<SModel>> m_models;
+	TArray<TWeak<SModel>> m_models;
+
+	// default material for all models
+	TShared<SSTMaterial> m_defaultMaterial;
 };

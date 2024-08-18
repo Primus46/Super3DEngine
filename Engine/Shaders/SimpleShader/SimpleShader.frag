@@ -66,11 +66,11 @@ void main() {
 
 		// ambient algorithm
 		// minimum light value
-		vec3 ambientLight = max(dirLights[i].ambient, baseColour);
+		vec3 ambientLight = baseColour * dirLights[i].ambient;
 
 		// light colour algorithm
 		// basically just adjusts how much colour you can see based on the normal direction
-		vec3 lightColour = dirLights[i].colour;
+		vec3 lightColour = baseColour * dirLights[i].colour;
 		lightColour *= colourIntensity;
 		lightColour *= dirLights[i].intensity;
 
@@ -79,6 +79,7 @@ void main() {
 		float specPower = pow(max(dot(viewDir, reflectDir), 0.0f), material.shininess);
 		vec3 specular = specularColour * specPower;
 		specular *= material.specularStrength;
+		specular *= dirLights[i].intensity;
 
 		// add light values together to get the result
 		result += (ambientLight + lightColour + specular);
@@ -112,7 +113,7 @@ void main() {
 
 		// light colour algorithm
 		// basically just adjusts how much colour you can see based on the normal direction
-		vec3 lightColour = pointLights[i].colour;
+		vec3 lightColour = baseColour * pointLights[i].colour;
 		lightColour *= diff;
 		lightColour *= attenuation;
 		lightColour *= pointLights[i].intensity;
@@ -122,6 +123,7 @@ void main() {
 		float specPower = pow(max(dot(viewDir, reflectDir), 0.0f), material.shininess);
 		vec3 specular = specularColour * specPower;
 		specular *= material.specularStrength;
+		specular *= pointLights[i].intensity;
 
 		// add light values together to get the result
 		result += (lightColour + specular);

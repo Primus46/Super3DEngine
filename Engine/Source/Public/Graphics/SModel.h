@@ -17,12 +17,11 @@ struct SSTMaterial;
 class SModel {
 public:
 	SModel() = default;
-	~SModel() = default;
-
+	~SModel() { SDebug::Log("Model Destroyed"); }
 
 	// import a 3D model from a file
 	// uses the ASSIMP import library, check docs to know which file types accepted
-	void ImportModel(const SString& filePath);
+	void ImportModel(const SString& filePath, const TShared<SSTMaterial>& defaultMaterial);
 
 	// render all of the meshes within the model
 	// transform of meshes will be based on the model transformations
@@ -33,6 +32,9 @@ public:
 
 	// set a material by the slot number
 	void SetMaterialBySlot(unsigned int slot, const TShared<SSTMaterial>& material);
+
+	// transform offset
+	SSTTransform m_offset;
 
 private:
 	// find all of the meshes in a scene and convert them to a SMesh

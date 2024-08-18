@@ -43,6 +43,9 @@ public:
 	void Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTransform& transform, 
 		const TArray<TShared<SSTLight>>& lights, const TShared<SSTMaterial>& material);
 
+	// draw a wireframe of a mesh
+	void Wireframe(const TShared<SShaderProgram>& shader, const SSTTransform& transform);
+
 	// set the transform of the mesh relative to the model
 	void SetRelativeTransform(const glm::mat4& transform) { m_matTransform = transform; }
 

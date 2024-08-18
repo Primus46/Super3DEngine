@@ -1,8 +1,11 @@
 #include "Game/SGameEngine.h"
 #include "Game/GameObjects/SObject.h"
+#include "Game/GameObjects/SWorldObject.h"
+#include "Game/GameObjects/MyObjects/Player.h"
 
-// Debug
-#include "Game/GameObjects/SObjectChild.h"
+// Custom
+#include "Game/GameObjects/MyObjects/Helmet.h"
+#include "Game/GameObjects/MyObjects/Gem.h"
 
 SGameEngine* SGameEngine::GetGameEngine()
 {
@@ -33,6 +36,11 @@ bool SGameEngine::Run()
 void SGameEngine::DestroyObject(const TShared<SObject>& object)
 {
 	m_objectsPendingDestroyed.push_back(object);
+}
+
+TUnique<SGraphicsEngine>& SGameEngine::GetGraphics()
+{
+	return m_window->GetGraphics();
 }
 
 SGameEngine::SGameEngine()
@@ -75,7 +83,7 @@ bool SGameEngine::Init()
 
 	// creating an sdl window
 	if (!m_window->CreateWindow({ "Game window",
-		SDL_WINDOWPOS_CENTERED_DISPLAY(1), SDL_WINDOWPOS_CENTERED_DISPLAY(1),
+		SDL_WINDOWPOS_CENTERED_DISPLAY(0), SDL_WINDOWPOS_CENTERED_DISPLAY(0),
 		720, 720 }))
 		return false;
 
@@ -91,7 +99,19 @@ void SGameEngine::Start()
 	// register the window inputs
 	m_window->RegisterInput(m_input);
 
-	CreateObject<SObjectChild>().lock()->SetLifeTime(3.0f);
+	TWeak<Helmet> helm1 = CreateObject<Helmet>();
+	TWeak<Helmet> helm2 = CreateObject<Helmet>();
+	TWeak<Helmet> helm3 = CreateObject<Helmet>();
+
+	helm1.lock()->GetTransform().position = glm::vec3(0.0f, 0.0f, 50.0f);
+	helm2.lock()->GetTransform().position = glm::vec3(0.0f, 50.0f, 0.0f);
+	helm3.lock()->GetTransform().position = glm::vec3(0.0f, -50.0f, 0.0f);
+
+	TWeak<Gem> gem1 = CreateObject<Gem>();
+
+	gem1.lock()->GetTransform().position = glm::vec3(50.0f, 0.0f, 0.0f);
+
+	CreateObject<Player>();
 }
 
 void SGameEngine::GameLoop()
@@ -142,6 +162,29 @@ void SGameEngine::Tick()
 	// run through all SObjects in the game and run their ticks
 	for (const auto& SObjectRef : m_objectStack) {
 		SObjectRef->Tick(DeltaTimef());
+		
+		// check the object is a world object, otherwise skip stack
+		if (const auto& woRef = std::dynamic_pointer_cast<SWorldObject>(SObjectRef)) 
+		{ 
+			// check the object has collisions 
+			if (woRef->HasCollisions())
+			{
+				// loop through all objects to test against
+				for (const auto& otherObj : m_objectStack)
+				{
+					// test if the other object is also a world object
+					if (const auto& otherWoRef = std::dynamic_pointer_cast<SWorldObject>(otherObj))
+					{
+						if (!otherWoRef->HasCollisions())
+							continue;
+
+						// if all is good test if the collisions are overlapping
+						woRef->TestCollision(otherWoRef);
+					}
+				}
+			}
+		}
+
 		SObjectRef->PostTick(DeltaTimef());
 	}
 }

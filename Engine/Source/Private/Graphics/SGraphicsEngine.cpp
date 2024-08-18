@@ -14,7 +14,6 @@
 
 
 // test for debug
-TWeak<SModel> m_model;
 TWeak<SSTPointLight> m_pointLight;
 
 bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
@@ -79,6 +78,18 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 		SDebug::Log("Graphics engine failed to initialise due to shader failure");
 		return false;
 	}
+	
+	//// create the shader object
+	//m_wireShader = TMakeShared<SShaderProgram>();
+
+	//// attempt to init shader and test if failed
+	//if (!m_wireShader->InitShader(
+	//	"Shaders/Wireframe/Wireframe.vertex",
+	//	"Shaders/Wireframe/Wireframe.frag"
+	//)) {
+	//	SDebug::Log("Graphics engine failed to initialise due to shader failure");
+	//	return false;
+	//}
 
 	// create the camera
 	m_camera = TMakeShared<SSTCamera>();
@@ -88,15 +99,21 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 	TShared<STexture> defaultTexture = TMakeShared<STexture>();
 
 	// add the texture to the mesh if it successfully created
-	if (!defaultTexture->LoadTexture("Default Grid", "Textures/Name_1m x 1m.png")) {
+	if (!defaultTexture->LoadTexture("Default Grey", "Textures/T_Default_Grey.png")) {
 		SDebug::Log("Graphics engine default texture failed to load", ST_ERROR);
 	}
 
+	// init a default material for all models
+	m_defaultMaterial = TMakeShared<SSTMaterial>();
+
+	// set the texture for the default material
+	m_defaultMaterial->m_baseColourMap = defaultTexture;
+	m_defaultMaterial->specularStrength = 0.0f;
 
 	// DEBUG
-	m_model = ImportModel("Models/Gem/gem1.glb");
-	m_model.lock()->GetTransform().position.x = 15.0f;
-	m_model.lock()->GetTransform().scale = glm::vec3(0.75f);
+	//ImportModel("Models/Gem/gem1.glb");
+	/*m_model.lock()->GetTransform().position.x = 15.0f;
+	m_model.lock()->GetTransform().scale = glm::vec3(0.75f);*/
 
 	TShared<STexture> GemtTex1 = TMakeShared<STexture>();
 	GemtTex1->LoadTexture("Gem base colour", "Models/Gem/Textures/gem1_EMISSIVE_0.jpeg");
@@ -119,13 +136,13 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 	mat4->m_baseColourMap = GemtTex2;
 	mat4->m_specularMap = GemSpecTex2;
 
-	m_model.lock()->SetMaterialBySlot(0, mat3);
-	m_model.lock()->SetMaterialBySlot(1, mat4);
+	/*m_model.lock()->SetMaterialBySlot(0, mat3);
+	m_model.lock()->SetMaterialBySlot(1, mat4);*/
 
-	m_model = ImportModel("Models/Chest/RenderAnim.fbx");
+	/*m_model = ImportModel("Models/Chest/RenderAnim.fbx");
 	m_model.lock()->GetTransform().position.x = -15.0f;
 	m_model.lock()->GetTransform().rotation.y = 90.0f;
-	m_model.lock()->GetTransform().scale = glm::vec3(0.75f);
+	m_model.lock()->GetTransform().scale = glm::vec3(0.75f);*/
 
 	TShared<STexture> ChestTex = TMakeShared<STexture>();
 	ChestTex->LoadTexture("Chest base colour", "Models/Chest/Textures/Chest_BaseColour.tga.png");
@@ -148,43 +165,12 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 	mat6->m_baseColourMap = ChestLockTex;
 	mat6->m_specularMap = ChestLockSpecTex;
 
-	m_model.lock()->SetMaterialBySlot(0, mat5);
-	m_model.lock()->SetMaterialBySlot(1, mat6);
+	/*m_model.lock()->SetMaterialBySlot(0, mat5);
+	m_model.lock()->SetMaterialBySlot(1, mat6);*/
 
 
-	m_model = ImportModel("Models/Helmet3/Helmet3.fbx");
-	m_model.lock()->GetTransform().scale = glm::vec3(0.75f);
-
-	// creating a texture
-	TShared<STexture> tex = TMakeShared<STexture>();
-	tex->LoadTexture("head base colour", "Models/Helmet3/Textures/Head_Base_color.png");
-
-	// creating a specular texture
-	TShared<STexture> specTex = TMakeShared<STexture>();
-	specTex->LoadTexture("head spec colour", "Models/Helmet3/Textures/Head_Specular.png");
-
-	// creating a second texture
-	TShared<STexture> tex2 = TMakeShared<STexture>();
-	tex2->LoadTexture("face texture base colour", "Models/Helmet3/Textures/facetexture_Base_color.png");
-
-	// creating a second specular texture
-	TShared<STexture> specTex2 = TMakeShared<STexture>();
-	specTex2->LoadTexture("face texture spec colour", "Models/Helmet3/Textures/facetexture_Specular.png");
-
-	// creating a material
-	TShared<SSTMaterial> mat = TMakeShared<SSTMaterial>();
-	TShared<SSTMaterial> mat2 = TMakeShared<SSTMaterial>();
-	// assigning the texture to the base colour map for the material
-	mat->m_baseColourMap = tex;
-	mat->m_specularMap = specTex;
-
-	mat2->m_baseColourMap = tex2;
-	mat2->m_specularMap = specTex2;
-
-	// setting the material to the 0 slot in the model
-	m_model.lock()->SetMaterialBySlot(0, mat);
-	m_model.lock()->SetMaterialBySlot(1, mat2);
-
+	/*m_model = ImportModel("Models/Helmet3/Helmet3.fbx");
+	m_model.lock()->GetTransform().scale = glm::vec3(0.75f);*/
 
 
 	// create the dir light
@@ -238,16 +224,16 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// set background colour
-	//glClearColor(0.0f, 1.0f, 0.5f, 1.0f);	// cool seafoam green-ish colour
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);	
+	//glClearColor(0.0f, 1.0f, 0.5f, 1.0f); // cool seafoam green-ish colour // Debug testing
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);	// black background
 	// clear the back buffer with a solid colour
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// m_model->GetTransform().position.x = -2.0f;
 
-	m_model.lock()->GetTransform().rotation.x += 0.01f;
-	m_model.lock()->GetTransform().rotation.y += 0.01f;
-	m_model.lock()->GetTransform().rotation.z += 0.01f;
+	//m_model.lock()->GetTransform().rotation.x += 0.01f;
+	//m_model.lock()->GetTransform().rotation.y += 0.01f;
+	//m_model.lock()->GetTransform().rotation.z += 0.01f;
 	//m_pointLight.lock()->position.z += 0.0005f;
 
 
@@ -259,8 +245,17 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 
 	// rendered custom graphics
 	// models will update their own positions in the mesh based on the transform
-	for (const auto& modelRef : m_models) {
-		modelRef->Render(m_shader, m_lights);
+	for (int i = m_models.size() - 1; i >= 0; --i) {
+		// detecting if the ereference exists
+		if (const auto& modelRef = m_models[i].lock()) {
+			// render if thre is a reference
+			modelRef->Render(m_shader, m_lights);
+		}
+		else {
+			// erase from the array if there is no reference
+			m_models.erase(m_models.begin() + i);
+		}
+
 	}
 
 	// presented the frame to the window
@@ -287,10 +282,10 @@ TWeak<SSTDirLight> SGraphicsEngine::CreateDirLight()
 	return newLight;
 }
 
-TWeak<SModel> SGraphicsEngine::ImportModel(const SString& path)
+TShared<SModel> SGraphicsEngine::ImportModel(const SString& path)
 {
 	const auto& newModel = TMakeShared<SModel>();
-	newModel->ImportModel(path);
+	newModel->ImportModel(path, m_defaultMaterial);
 	m_models.push_back(newModel);
 
 	return newModel;

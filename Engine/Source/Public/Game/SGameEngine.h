@@ -41,6 +41,9 @@ public:
 	// all game objeects destroy functions will automatically run this
 	void DestroyObject(const TShared<SObject>& object);
 
+	// get the graphics engine
+	TUnique<SGraphicsEngine>& GetGraphics();
+
 private:
 	// constructor and destructor are private to ensure we can only have 1 game engine
 	SGameEngine();

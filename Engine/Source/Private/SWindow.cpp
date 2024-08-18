@@ -152,8 +152,8 @@ void SWindow::RegisterInput(const TShared<SInput>& m_input)
 		m_cameraRotation.y = -xrel;
 		m_cameraRotation.x = -yrel;
 
-		SString log = "X: " + std::to_string(m_cameraRotation.x) +", Y: " + std::to_string(m_cameraRotation.y);
-		SDebug::Log(log);
+		//SString log = "X: " + std::to_string(m_cameraRotation.x) +", Y: " + std::to_string(m_cameraRotation.y);
+		//SDebug::Log(log);
 	});
 
 	m_input->OnMouseScroll->Bind([this](const float& delta) {
@@ -193,14 +193,14 @@ void SWindow::Render()
 	if (m_graphicsEngine) {
 		// tes if here is a camera 
 		if (const auto& camRef = m_graphicsEngine->GetCamera().lock()) {
-			// translate the camera based on input direction
-			camRef->Translate(m_cameraDirection);
 
 			if (!m_inputMode) {
 				// rotate the camera based on input direction
 				camRef->Rotate(m_cameraRotation, glm::abs(m_cameraRotation));
 			}
 			
+			// translate the camera based on input direction
+			camRef->Translate(m_cameraDirection);
 		}
 
 		m_graphicsEngine->Render(m_sdlWindow);
