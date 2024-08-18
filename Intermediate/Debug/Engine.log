@@ -1,5 +1,10 @@
-﻿  SGraphicsEngine.cpp
-C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Engine\Source\Private\Graphics\SGraphicsEngine.cpp(248,13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+﻿  Player.cpp
+  SGraphicsEngine.cpp
+C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Engine\Source\Private\Graphics\SGraphicsEngine.cpp(268,13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Engine\Source\Private\Graphics\SGraphicsEngine.cpp(292,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  SShaderProgram.cpp
+  SWindow.cpp
+  Generating Code...
   Engine.vcxproj -> C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Build\Debug\Super3DEngine.exe
   C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Engine\ExternalLibs\LIBS\assimp-vc143-mtd.dll
   C:\Users\Conno\Documents\AIT\Year 2\Advanced Game Engine Programming\Classwork\Super3DEngine\Engine\ExternalLibs\LIBS\glew32.dll

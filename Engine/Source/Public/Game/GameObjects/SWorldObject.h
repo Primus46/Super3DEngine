@@ -14,7 +14,7 @@ public:
 	TWeak<SModel> ImportModel(const SString& path);
 
 	// add a collision to the object
-	TWeak<SSTCollision> AddCollision(const SSTBox& box, const bool& debud = false);
+	TWeak<SSTCollision> AddCollision(const SSTBox& box, const bool& debug = false);
 
 	SSTTransform& GetTransform() { return m_transform; }
 
@@ -29,7 +29,8 @@ protected:
 
 	// on collision overlap
 	// detect every frame a collision is overlapped
-	virtual void OnOverlap(const TShared<SWorldObject>& other, const TShared<SSTCollision>& otherCol) {}
+	virtual void OnOverlap(const TShared<SWorldObject>& other,
+		const TShared<SSTCollision>& col, const TShared<SSTCollision>& otherCol) {}
 
 private:
 	// transform in world space

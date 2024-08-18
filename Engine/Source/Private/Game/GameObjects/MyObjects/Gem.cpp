@@ -37,20 +37,22 @@ void Gem::OnStart()
 		modelRef->SetMaterialBySlot(1, mat4);
 	}
 
-	AddCollision({ GetTransform().position, glm::vec3(10.0f) });
+	AddCollision({ GetTransform().position, glm::vec3(5.0f, 7.0f, 5.0f) }, true);
 }
 
 void Gem::OnTick(float deltaTime)
 {
 	SWorldObject::OnTick(deltaTime);
 
-	GetTransform().rotation.y += 10.0f * deltaTime;
+	GetTransform().rotation.y += 100.0f * deltaTime;
 }
 
-void Gem::OnOverlap(const TShared<SWorldObject>& other, const TShared<SSTCollision>& otherCol)
+void Gem::OnOverlap(const TShared<SWorldObject>& other, const TShared<SSTCollision>& col, const TShared<SSTCollision>& otherCol)
 {
 	if (otherCol->type == SECollisionTypes::PLAYER)
 	{
-		Destroy();
+		SDebug::Log("Gem Overlap with Player");
+		col->debugColour = glm::vec3(0.0f, 1.0f, 0.0f);
+		//Destroy();
 	}
 }

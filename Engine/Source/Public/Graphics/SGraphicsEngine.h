@@ -4,6 +4,7 @@
 
 typedef void* SDL_GLContext;
 struct SDL_Window;
+struct SSTCollision;
 class SModel;
 class SShaderProgram;
 struct SSTCamera;
@@ -36,6 +37,9 @@ public:
 	// create a material for the engine
 	TShared<SSTMaterial> CreateMaterial();
 
+	// create a collision mesh to be rendered as a wireframe
+	void CreateCollisionMesh(const TWeak<SSTCollision>& col);
+
 private:
 	// storing memoery location for open gl context
 	SDL_GLContext m_sdlGLContext;
@@ -54,6 +58,9 @@ private:
 
 	// store all models in the engine
 	TArray<TWeak<SModel>> m_models;
+
+	// stroe all collision meshes
+	TArray<TWeak<SSTCollision>> m_collisions;
 
 	// default material for all models
 	TShared<SSTMaterial> m_defaultMaterial;

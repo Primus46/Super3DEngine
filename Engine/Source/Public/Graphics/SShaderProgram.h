@@ -44,6 +44,9 @@ public:
 	// set the material in the shader
 	void SetMaterial(const TShared<SSTMaterial>& material);
 
+	// only works of wireframe shader
+	void SetWireColour(const glm::vec3& colour);
+
 private:
 	// import a shader based on the shader type
 	bool ImportShaderByType(const SString& filePath, SEShaderType shaderType);

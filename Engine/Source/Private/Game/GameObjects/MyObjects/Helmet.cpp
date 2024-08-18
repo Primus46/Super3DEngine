@@ -43,7 +43,7 @@ void Helmet::OnStart()
 		modelRef->SetMaterialBySlot(1, mat2);
 	}
 
-	AddCollision({ GetTransform().position, glm::vec3(10.0f) });
+	AddCollision({ GetTransform().position, glm::vec3(10.0f, 15.0f, 10.0f) }, true);
 
 
 	/*if (const auto& modelRef = ImportModel("Models/Helmet3/Helmet3.fbx").lock()) {
@@ -61,12 +61,13 @@ void Helmet::OnTick(float deltaTime)
 	GetTransform().rotation.y += 10.0f * deltaTime;
 }
 
-void Helmet::OnOverlap(const TShared<SWorldObject>& other, const TShared<SSTCollision>& otherCol)
+void Helmet::OnOverlap(const TShared<SWorldObject>& other, const TShared<SSTCollision>& col, const TShared<SSTCollision>& otherCol)
 {
 	if (otherCol->type == SECollisionTypes::PLAYER)
 	{
 		SDebug::Log("Helmet Overlapped with Player");
-		Destroy();
+		col->debugColour = glm::vec3(0.0f, 1.0f, 0.0f);
+		//Destroy();
 	}
 }
 

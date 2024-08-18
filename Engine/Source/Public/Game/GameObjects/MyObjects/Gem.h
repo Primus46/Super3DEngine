@@ -10,6 +10,7 @@ protected:
 
 	void OnTick(float deltaTime) override;
 
-	void OnOverlap(const TShared<SWorldObject>& other, const TShared<SSTCollision>& otherCol) override;
+	void OnOverlap(const TShared<SWorldObject>& other,
+		const TShared<SSTCollision>& col, const TShared<SSTCollision>& otherCol) override;
 
 };

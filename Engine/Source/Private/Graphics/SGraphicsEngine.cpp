@@ -1,10 +1,12 @@
 #include "Graphics/SGraphicsEngine.h"
+#include "Graphics/SMesh.h"
 #include "Graphics/SModel.h"
 #include "Graphics/SShaderProgram.h"
 #include "Math/SSTTransform.h"
 #include "Graphics/STexture.h"
 #include "Graphics/SSTCamera.h"
 #include "Graphics/SSTLight.h"
+#include "Math/SSTCollision.h"
 
 
 // External Libs
@@ -12,6 +14,25 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_opengl.h>
 
+// collision cube vertices
+const std::vector<SSTVertexData> colMeshVData = {
+	// x   // y   // z 
+{ {	-1.0f, -1.0f,  1.0f } }, // bl f
+{ {	 1.0f, -1.0f,  1.0f } }, // br f
+{ {  1.0f,  1.0f,  1.0f } }, // tr f
+{ { -1.0f,  1.0f,  1.0f } }, // tl f
+{ {	-1.0f, -1.0f, -1.0f } }, // bl b
+{ {	 1.0f, -1.0f, -1.0f } }, // br b
+{ {  1.0f,  1.0f, -1.0f } }, // tr b
+{ { -1.0f,  1.0f, -1.0f } }, // tl b
+};
+
+// collision cube indices
+const std::vector<uint32_t> colMeshIData = {
+	0, 1, 1, 2, 2, 3, 3, 0, // front
+	4, 5, 5, 6, 6, 7, 7, 4, // back
+	0, 4, 1, 5, 2, 6, 3, 7  // sides
+};
 
 // test for debug
 TWeak<SSTPointLight> m_pointLight;
@@ -79,17 +100,16 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 		return false;
 	}
 	
-	//// create the shader object
-	//m_wireShader = TMakeShared<SShaderProgram>();
+	m_wireShader = TMakeShared<SShaderProgram>();
 
-	//// attempt to init shader and test if failed
-	//if (!m_wireShader->InitShader(
-	//	"Shaders/Wireframe/Wireframe.vertex",
-	//	"Shaders/Wireframe/Wireframe.frag"
-	//)) {
-	//	SDebug::Log("Graphics engine failed to initialise due to shader failure");
-	//	return false;
-	//}
+	if (!m_wireShader->InitShader(
+		"Shaders/Wireframe/Wireframe.vertex",
+		"Shaders/Wireframe/Wireframe.frag"
+	)) {
+		SDebug::Log("Graphics engine failed to initialise due to wireframe shader failure");
+		return false;
+	}
+
 
 	// create the camera
 	m_camera = TMakeShared<SSTCamera>();
@@ -258,6 +278,39 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 
 	}
 
+	//__________Wireframe Shader__________
+	if (m_collisions.size() > 0)
+	{
+		// activate the shader
+		m_wireShader->Activate();
+
+		// set the world transformations based on the camera
+		m_wireShader->SetWorldTransform(m_camera);
+
+		// rendered custom graphics
+		// models will update their own positions in the mesh based on the transform
+		for (int i = m_collisions.size() - 1; i >= 0; --i) {
+			// detecting if the ereference exists
+			if (const auto& colRef = m_collisions[i].lock()) {
+				// convert position of collision into transform
+				SSTTransform transform;
+				transform.position = colRef->box.position;
+				transform.scale = colRef->box.halfSize;
+
+				// set the colour of the box
+				m_wireShader->SetWireColour(colRef->debugColour);
+
+				// render if thre is a reference
+				colRef->debugMesh->WireRender(m_wireShader, transform);
+			}
+			else {
+				// erase from the array if there is no reference
+				m_collisions.erase(m_collisions.begin() + i);
+			}
+
+		}
+	}
+
 	// presented the frame to the window
 	// swaping the back buffer with the front buffer
 	SDL_GL_SwapWindow(sdlWindow);
@@ -294,4 +347,21 @@ TShared<SModel> SGraphicsEngine::ImportModel(const SString& path)
 TShared<SSTMaterial> SGraphicsEngine::CreateMaterial()
 {
 	return TMakeShared<SSTMaterial>();
+}
+
+void SGraphicsEngine::CreateCollisionMesh(const TWeak<SSTCollision>& col)
+{
+	if (const auto& colRef = col.lock())
+	{
+		TShared<SMesh> newMesh = TMakeShared<SMesh>();
+
+		// create a box of lines
+		newMesh->CreateMesh(colMeshVData, colMeshIData);
+
+		// stroe the shared mesh into the collision
+		colRef->debugMesh = newMesh;
+
+		// add the mesh to be rendered
+		m_collisions.push_back(col);
+	}
 }

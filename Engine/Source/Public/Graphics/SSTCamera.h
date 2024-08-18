@@ -1,5 +1,6 @@
 #pragma once
 #include "Math/SSTTransform.h"
+#include "Game/SGameEngine.h"
 
 struct SSTCamera {
 	SSTCamera() {
@@ -8,14 +9,14 @@ struct SSTCamera {
 		aspectRatio = 1.0f;
 		nearClip = 0.01f;
 		farClip = 10000.0f;
-		moveSpeed = 0.001f;
-		rotateSpeed = 0.1f;
+		moveSpeed = 50.0f;
+		rotateSpeed = 0.005f;/* my mouse dpi is set to 3800, 
+		if your dpi is lower increase this value for faster rotation or decrease it if your mouse
+		dpi is higher */
 	}
 
 	// rotate the camera based on the rotation passed in
 	void Rotate(glm::vec3 rotation, glm::vec3 scale = glm::vec3(1.0f)) {
-		if (glm::length(rotation) != 0.0f)
-			rotation = glm::normalize(rotation);
 
 		transform.rotation += rotation * scale * rotateSpeed;
 
@@ -38,7 +39,16 @@ struct SSTCamera {
 		if (glm::length(MoveDir) != 0.0f)
 			MoveDir = glm::normalize(MoveDir);
 
-		transform.position += MoveDir * scale * moveSpeed;
+		glm::vec3 direction = MoveDir * scale;
+
+		float deltaTime = 1.0f;
+
+		if (const auto & ge = SGameEngine::GetGameEngine())
+		{
+			deltaTime = ge->DeltaTimef();
+		}
+
+		transform.position += direction * moveSpeed * deltaTime;
 	}
 
 	// zoom in the camera based on the amount added

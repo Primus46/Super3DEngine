@@ -15,14 +15,19 @@ TWeak<SModel> SWorldObject::ImportModel(const SString& path)
 	//return TWeak<SModel>();
 }
 
-TWeak<SSTCollision> SWorldObject::AddCollision(const SSTBox& box, const bool& debud)
+TWeak<SSTCollision> SWorldObject::AddCollision(const SSTBox& box, const bool& debug)
 {
 	// create the collision
 	const TShared<SSTCollision>& newCol = TMakeShared<SSTCollision>();
 	// set the position and size
 	newCol->box = box;
 
-	// TO DO: DEBUG COLLISION
+
+	if (debug)
+	{ 
+		SGameEngine::GetGameEngine()->GetGraphics()->CreateCollisionMesh(newCol);
+	}
+	
 
 	// add the collision to the array
 	m_objectCollisions.push_back(newCol);
@@ -41,7 +46,7 @@ void SWorldObject::TestCollision(const TShared<SWorldObject>& other)
 		{
 			if (SSTCollision::IsOverLapping(*col, *otherCol)) 
 			{
-				OnOverlap(other, otherCol);
+				OnOverlap(other, col ,otherCol);
 			}
 		}
 	}

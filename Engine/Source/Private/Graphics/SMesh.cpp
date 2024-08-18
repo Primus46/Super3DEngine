@@ -171,7 +171,7 @@ void SMesh::Render(const std::shared_ptr<SShaderProgram>& shader, const SSTTrans
 	glBindVertexArray(0);
 }
 
-void SMesh::Wireframe(const TShared<SShaderProgram>& shader, const SSTTransform& transform)
+void SMesh::WireRender(const TShared<SShaderProgram>& shader, const SSTTransform& transform)
 {
 	// update the transform of the mesh based on the model transform
 	shader->SetModelTransform(transform);
@@ -184,7 +184,7 @@ void SMesh::Wireframe(const TShared<SShaderProgram>& shader, const SSTTransform&
 
 	// render the vao
 	glDrawElements(
-		GL_LINE_LOOP, // draw the mesh as triangles
+		GL_LINES, // draw the mesh as triangles
 		static_cast<GLsizei>(m_indices.size()), // how many vertices are there?
 		GL_UNSIGNED_INT, // what type of data is the index array
 		nullptr // how many are you going to skip

@@ -23,6 +23,7 @@ const SUi32 maxPointLights = 20;
 SShaderProgram::SShaderProgram()
 {
 	m_programID = 0;
+	SDebug::Log("SShaderProgram constructor called, initial program ID: " + std::to_string(m_programID));
 }
 
 SShaderProgram::~SShaderProgram()
@@ -295,6 +296,14 @@ void SShaderProgram::SetMaterial(const TShared<SSTMaterial>& material)
 
 	// update the shader
 	glUniform1f(varID, material->specularStrength);
+}
+
+void SShaderProgram::SetWireColour(const glm::vec3& colour)
+{
+	glUniform3fv(glGetUniformLocation(m_programID, "wireColour"),
+		1,
+		glm::value_ptr(colour)
+	);
 }
 
 bool SShaderProgram::ImportShaderByType(const SString& filePath, SEShaderType shaderType)
