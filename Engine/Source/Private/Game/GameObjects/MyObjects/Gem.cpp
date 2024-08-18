@@ -24,20 +24,22 @@ void Gem::OnStart()
 		TShared<STexture> GemSpecTex2 = TMakeShared<STexture>();
 		GemSpecTex2->LoadTexture("Gem spec colour", "Models/Gem/Textures/gem1_Specular.png");
 
-		TShared<SSTMaterial> mat3 = TMakeShared<SSTMaterial>();
-		TShared<SSTMaterial> mat4 = TMakeShared<SSTMaterial>();
+		TShared<SSTMaterial> mat = TMakeShared<SSTMaterial>();
+		TShared<SSTMaterial> mat2 = TMakeShared<SSTMaterial>();
 
-		mat3->m_baseColourMap = GemtTex1;
-		mat3->m_specularMap = GemSpecTex1;
+		mat->m_baseColourMap = GemtTex1;
+		mat->m_specularMap = GemSpecTex1;
+		mat->specularStrength = 0.1f;
 
-		mat4->m_baseColourMap = GemtTex2;
-		mat4->m_specularMap = GemSpecTex2;
+		mat2->m_baseColourMap = GemtTex2;
+		mat2->m_specularMap = GemSpecTex2;
+		mat2->specularStrength = 0.1f;
 
-		modelRef->SetMaterialBySlot(0, mat3);
-		modelRef->SetMaterialBySlot(1, mat4);
+		modelRef->SetMaterialBySlot(0, mat);
+		modelRef->SetMaterialBySlot(1, mat2);
 	}
 
-	AddCollision({ GetTransform().position, glm::vec3(5.0f, 7.0f, 5.0f) }, true);
+	AddCollision({ GetTransform().position, glm::vec3(5.0f, 7.0f, 5.0f) });
 }
 
 void Gem::OnTick(float deltaTime)
@@ -53,6 +55,6 @@ void Gem::OnOverlap(const TShared<SWorldObject>& other, const TShared<SSTCollisi
 	{
 		SDebug::Log("Gem Overlap with Player");
 		col->debugColour = glm::vec3(0.0f, 1.0f, 0.0f);
-		//Destroy();
+		Destroy();
 	}
 }

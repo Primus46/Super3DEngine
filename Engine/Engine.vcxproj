@@ -99,9 +99,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ExternalLibs\Includes\STB_IMAGE\stb_image.cpp" />
+    <ClCompile Include="Source\Private\Game\GameObjects\MyObjects\Chest.cpp" />
+    <ClCompile Include="Source\Private\Game\GameObjects\MyObjects\Coin.cpp" />
     <ClCompile Include="Source\Private\Game\GameObjects\MyObjects\Gem.cpp" />
     <ClCompile Include="Source\Private\Game\GameObjects\MyObjects\Helmet.cpp" />
     <ClCompile Include="Source\Private\Game\GameObjects\MyObjects\Player.cpp" />
+    <ClCompile Include="Source\Private\Game\GameObjects\MyObjects\Star.cpp" />
     <ClCompile Include="Source\Private\Game\GameObjects\SObject.cpp" />
     <ClCompile Include="Source\Private\Game\SGameEngine.cpp" />
     <ClCompile Include="Source\Private\Graphics\SGraphicsEngine.cpp" />
@@ -118,9 +121,12 @@
     <ClInclude Include="ExternalLibs\Includes\STB_IMAGE\stb_image.h" />
     <ClInclude Include="Source\Public\Debugging\SDebug.h" />
     <ClInclude Include="Source\Public\EngineTypes.h" />
+    <ClInclude Include="Source\Public\Game\GameObjects\MyObjects\Chest.h" />
+    <ClInclude Include="Source\Public\Game\GameObjects\MyObjects\Coin.h" />
     <ClInclude Include="Source\Public\Game\GameObjects\MyObjects\Gem.h" />
     <ClInclude Include="Source\Public\Game\GameObjects\MyObjects\Helmet.h" />
     <ClInclude Include="Source\Public\Game\GameObjects\MyObjects\Player.h" />
+    <ClInclude Include="Source\Public\Game\GameObjects\MyObjects\Star.h" />
     <ClInclude Include="Source\Public\Game\GameObjects\SObject.h" />
     <ClInclude Include="Source\Public\Game\GameObjects\SWorldObject.h" />
     <ClInclude Include="Source\Public\Game\SGameEngine.h" />

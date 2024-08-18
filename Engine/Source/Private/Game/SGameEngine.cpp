@@ -6,6 +6,9 @@
 // Custom
 #include "Game/GameObjects/MyObjects/Helmet.h"
 #include "Game/GameObjects/MyObjects/Gem.h"
+#include "Game/GameObjects/MyObjects/Coin.h"
+#include "Game/GameObjects/MyObjects/Chest.h"
+#include "Game/GameObjects/MyObjects/Star.h"
 
 SGameEngine* SGameEngine::GetGameEngine()
 {
@@ -36,6 +39,16 @@ bool SGameEngine::Run()
 void SGameEngine::DestroyObject(const TShared<SObject>& object)
 {
 	m_objectsPendingDestroyed.push_back(object);
+	m_destroyedObjectsCount++;
+
+	if (m_destroyedObjectsCount == 4)
+	{
+		TWeak<Chest> chest1 = CreateObject<Chest>();
+
+		chest1.lock()->GetTransform().position = glm::vec3(0.0f, 0.0f, -100.0f);
+		chest1.lock()->GetTransform().rotation = glm::vec3(0.0f, 90.0f, 0.0f);
+		chest1.lock()->GetTransform().scale = glm::vec3(1.5f);
+	}
 }
 
 TUnique<SGraphicsEngine>& SGameEngine::GetGraphics()
@@ -47,6 +60,7 @@ SGameEngine::SGameEngine()
 {
 	m_lastTickTime = 0.0;
 	m_deltaTime = 0.0;
+	m_destroyedObjectsCount = 0;
 
 	SDebug::Log("Game Engine Created");
 }
@@ -101,17 +115,28 @@ void SGameEngine::Start()
 
 	TWeak<Helmet> helm1 = CreateObject<Helmet>();
 	TWeak<Helmet> helm2 = CreateObject<Helmet>();
-	TWeak<Helmet> helm3 = CreateObject<Helmet>();
 
-	helm1.lock()->GetTransform().position = glm::vec3(0.0f, 0.0f, 50.0f);
-	helm2.lock()->GetTransform().position = glm::vec3(0.0f, 50.0f, 0.0f);
-	helm3.lock()->GetTransform().position = glm::vec3(0.0f, -50.0f, 0.0f);
+	helm1.lock()->GetTransform().position = glm::vec3(30.0f, 0.0f, 150.0f);
+	helm2.lock()->GetTransform().position = glm::vec3(0.0f, -75.0f, 0.0f);
 
 	TWeak<Gem> gem1 = CreateObject<Gem>();
 
-	gem1.lock()->GetTransform().position = glm::vec3(50.0f, 0.0f, 0.0f);
+	gem1.lock()->GetTransform().position = glm::vec3(100.0f, 0.0f, 0.0f);
 
-	CreateObject<Player>();
+	TWeak<Coin> coin1 = CreateObject<Coin>();
+
+	coin1.lock()->GetTransform().position = glm::vec3(-125.0f, 40.0f, -60.0f);
+	coin1.lock()->GetTransform().rotation = glm::vec3(90.0f, 0.0f, 90.0f);
+	coin1.lock()->GetTransform().scale = glm::vec3(0.01f);
+
+	// To large to use
+	/*TWeak<Star> star1 = CreateObject<Star>();
+
+	star1.lock()->GetTransform().position = glm::vec3(0.0f, 50.0f, 0.0f);
+	star1.lock()->GetTransform().scale = glm::vec3(0.1f);*/
+
+	TWeak<Player> player = CreateObject<Player>();
+
 }
 
 void SGameEngine::GameLoop()

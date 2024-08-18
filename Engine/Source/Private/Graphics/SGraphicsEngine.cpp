@@ -130,68 +130,6 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 	m_defaultMaterial->m_baseColourMap = defaultTexture;
 	m_defaultMaterial->specularStrength = 0.0f;
 
-	// DEBUG
-	//ImportModel("Models/Gem/gem1.glb");
-	/*m_model.lock()->GetTransform().position.x = 15.0f;
-	m_model.lock()->GetTransform().scale = glm::vec3(0.75f);*/
-
-	TShared<STexture> GemtTex1 = TMakeShared<STexture>();
-	GemtTex1->LoadTexture("Gem base colour", "Models/Gem/Textures/gem1_EMISSIVE_0.jpeg");
-	
-	TShared<STexture> GemSpecTex1 = TMakeShared<STexture>();
-	GemSpecTex1->LoadTexture("Gem spec colour", "Models/Gem/Textures/gem1_NORMAL_1.jpeg");
-	
-	TShared<STexture> GemtTex2 = TMakeShared<STexture>();
-	GemtTex2->LoadTexture("Gem base colour", "Models/Gem/Textures/gem1_BASECOLOR_2.jpeg");
-
-	TShared<STexture> GemSpecTex2 = TMakeShared<STexture>();
-	GemSpecTex2->LoadTexture("Gem spec colour", "Models/Gem/Textures/gem1_Specular.png");
-	
-	TShared<SSTMaterial> mat3 = TMakeShared<SSTMaterial>();
-	TShared<SSTMaterial> mat4 = TMakeShared<SSTMaterial>();
-
-	mat3->m_baseColourMap = GemtTex1;
-	mat3->m_specularMap = GemSpecTex1;
-
-	mat4->m_baseColourMap = GemtTex2;
-	mat4->m_specularMap = GemSpecTex2;
-
-	/*m_model.lock()->SetMaterialBySlot(0, mat3);
-	m_model.lock()->SetMaterialBySlot(1, mat4);*/
-
-	/*m_model = ImportModel("Models/Chest/RenderAnim.fbx");
-	m_model.lock()->GetTransform().position.x = -15.0f;
-	m_model.lock()->GetTransform().rotation.y = 90.0f;
-	m_model.lock()->GetTransform().scale = glm::vec3(0.75f);*/
-
-	TShared<STexture> ChestTex = TMakeShared<STexture>();
-	ChestTex->LoadTexture("Chest base colour", "Models/Chest/Textures/Chest_BaseColour.tga.png");
-
-	TShared<STexture> ChestSpecTex = TMakeShared<STexture>();
-	ChestSpecTex->LoadTexture("Chest spec colour", "Models/Chest/Textures/Chest_Specular.tga.png");
-
-	TShared<STexture> ChestLockTex = TMakeShared<STexture>();
-	ChestLockTex->LoadTexture("Chest lock base colour", "Models/Chest/Textures/Head_BaseColour.tga.png");
-
-	TShared<STexture> ChestLockSpecTex = TMakeShared<STexture>();
-	ChestLockSpecTex->LoadTexture("Chest lock spec colour", "Models/Chest/Textures/Head_Roughness.tga.png");
-
-	TShared<SSTMaterial> mat5 = TMakeShared<SSTMaterial>();
-	TShared<SSTMaterial> mat6 = TMakeShared<SSTMaterial>();
-
-	mat5->m_baseColourMap = ChestTex;
-	mat5->m_specularMap = ChestSpecTex;
-
-	mat6->m_baseColourMap = ChestLockTex;
-	mat6->m_specularMap = ChestLockSpecTex;
-
-	/*m_model.lock()->SetMaterialBySlot(0, mat5);
-	m_model.lock()->SetMaterialBySlot(1, mat6);*/
-
-
-	/*m_model = ImportModel("Models/Helmet3/Helmet3.fbx");
-	m_model.lock()->GetTransform().scale = glm::vec3(0.75f);*/
-
 
 	// create the dir light
 	const auto& dirLight = CreateDirLight();
@@ -200,8 +138,8 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 	if (const auto& lightRef = dirLight.lock()) {
 		lightRef->colour = glm::vec3(0.0f, 0.0f, 0.0f);
 		lightRef->direction = glm::vec3(0.0f, -1.0f, 0.0f);
-		lightRef->ambient = glm::vec3(0.1f);
-		lightRef->intensity = 3.0f;
+		lightRef->ambient = glm::vec3(0.4f);
+		lightRef->intensity = 5.0f;
 	}
 
 	const auto& pointLight = CreatePointLight();
@@ -210,24 +148,25 @@ bool SGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 	const auto& pointLight4 = CreatePointLight();
 
 	if (const auto& lightRef = pointLight.lock()) {
-		lightRef->position = glm::vec3(0.0f, 0.0f, -15.0f);
+		lightRef->position = glm::vec3(30.0f, 15.0f, 150.0f);
 		lightRef->colour = glm::vec3(1.0f, 0.0f, 0.5f);
-		lightRef->intensity = 2.0f;
+		lightRef->intensity = 5.0f;
 	}
 
 	if (const auto& lightRef = pointLight2.lock()) {
-		lightRef->position = glm::vec3(0.0f, 0.0f, 15.0f);
+		lightRef->position = glm::vec3(10.0f, -60.0f, 0.0f);
 		lightRef->colour = glm::vec3(0.0f, 1.0f, 0.5f);
-		lightRef->intensity = 2.0f;
+		lightRef->intensity = 5.0f;
 	}
 
 	if (const auto& lightRef = pointLight3.lock()) {
-		lightRef->position = glm::vec3(-20.0f, 0.0f, 0.0f);
+		lightRef->position = glm::vec3(100.0f, 15.0f, 0.0f);
 		lightRef->colour = glm::vec3(0.0f, 0.5f, 1.0f);
+		lightRef->intensity = 5.0f;
 	}
 
 	if (const auto& lightRef = pointLight4.lock()) {
-		lightRef->position = glm::vec3(20.0f, 0.0f, 0.0f);
+		lightRef->position = glm::vec3(-50.0f, 25.0f, -75.0f);
 		lightRef->colour = glm::vec3(1.0f, 1.0f, 0.0f);
 		lightRef->intensity = 5.0f;
 	}
@@ -249,11 +188,6 @@ void SGraphicsEngine::Render(SDL_Window* sdlWindow)
 	// clear the back buffer with a solid colour
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// m_model->GetTransform().position.x = -2.0f;
-
-	//m_model.lock()->GetTransform().rotation.x += 0.01f;
-	//m_model.lock()->GetTransform().rotation.y += 0.01f;
-	//m_model.lock()->GetTransform().rotation.z += 0.01f;
 	//m_pointLight.lock()->position.z += 0.0005f;
 
 

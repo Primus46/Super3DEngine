@@ -10,7 +10,7 @@ Player::Player()
 
 void Player::OnStart()
 {
-	if (const auto& colRef = AddCollision({ GetTransform().position, glm::vec3(10.0f) }, true).lock())
+	if (const auto& colRef = AddCollision({ GetTransform().position, glm::vec3(10.0f) }).lock())
 	{
 		colRef->type = SECollisionTypes::PLAYER;
 	}

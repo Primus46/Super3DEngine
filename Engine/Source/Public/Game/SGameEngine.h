@@ -100,4 +100,6 @@ private:
 
 	// store all SObjects that have been marked for destroy
 	TArray<TShared<SObject>> m_objectsPendingDestroyed;
+
+	int m_destroyedObjectsCount;
 };

@@ -43,15 +43,7 @@ void Helmet::OnStart()
 		modelRef->SetMaterialBySlot(1, mat2);
 	}
 
-	AddCollision({ GetTransform().position, glm::vec3(10.0f, 15.0f, 10.0f) }, true);
-
-
-	/*if (const auto& modelRef = ImportModel("Models/Helmet3/Helmet3.fbx").lock()) {
-		modelRef->m_offset.position.x = 10.0f;
-	}
-	if (const auto& modelRef = ImportModel("Models/Helmet3/Helmet3.fbx").lock()) {
-		modelRef->m_offset.position.x = -10.0f;
-	}*/
+	AddCollision({ GetTransform().position, glm::vec3(10.0f, 15.0f, 10.0f) });
 }
 
 void Helmet::OnTick(float deltaTime)
@@ -67,7 +59,7 @@ void Helmet::OnOverlap(const TShared<SWorldObject>& other, const TShared<SSTColl
 	{
 		SDebug::Log("Helmet Overlapped with Player");
 		col->debugColour = glm::vec3(0.0f, 1.0f, 0.0f);
-		//Destroy();
+		Destroy();
 	}
 }
 

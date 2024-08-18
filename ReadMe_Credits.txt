@@ -7,3 +7,5 @@
 "Coin" (https://skfb.ly/oqGSQ) by rukitu is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 "Purple Gem" (https://skfb.ly/otKpX) by Voxelcubes Studios is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+"Gold Star" (https://skfb.ly/oqBBw) by AnshiNoWara is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
